@@ -1,0 +1,22 @@
+const Header = () => {
+  return (
+    <div className="flex justify-between p-3">
+      <button
+        type="button"
+        className="text-indigo-500 hover:text-indigo-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+      >
+        Discordと連携する
+      </button>
+      <button
+        id="question"
+        type="submit"
+        form="question"
+        className="text-white bg-blue-600 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+      >
+        質問する
+      </button>
+    </div>
+  );
+};
+
+export default Header;
