@@ -5,7 +5,7 @@ import useForms from "../hooks/Forms";
 import Code from "./Code";
 import Console from "./Console";
 import Preview from "./Preview";
-import { getUrl, getInputText, getTitle } from "./inputData";
+import { getUrl, getConsoleText, getTitle, getCodeText } from "./inputData";
 
 const Tabs = () => {
   const {
@@ -20,7 +20,8 @@ const Tabs = () => {
   } = useForms();
   const [toggle, setToggle] = useState(1);
   const [url, setUrl] = useState("");
-  const [inputText, setInputText] = useState("");
+  const [consoleText, setConsoleText] = useState("");
+  const [codeText, setCodeText] = useState("");
   const [question, setQuestion] = useState("");
 
   const setUrlHooks = async () => {
@@ -28,9 +29,14 @@ const Tabs = () => {
     setUrl(url as string);
   };
 
-  const setInputTextHooks = async () => {
-    const text = await getInputText();
-    setInputText(text as string);
+  const setConsoleTextHooks = async () => {
+    const text = await getConsoleText();
+    setConsoleText(text as string);
+  };
+
+  const setCodeTextHooks = async () => {
+    const text = await getCodeText();
+    setCodeText(text as string);
   };
 
   const setQuestionHooks = async () => {
@@ -39,18 +45,17 @@ const Tabs = () => {
   };
 
   setUrlHooks();
-  setInputTextHooks();
+  setConsoleTextHooks();
   setQuestionHooks();
-
-  console.log(inputText)
+  setCodeTextHooks();
 
   const handleClick = (id: number) => {
     setToggle(id);
   };
 
   return (
-    <div className="px-7 bg-gray-200">
-      <ul className="flex space-x-4 py-4">
+    <div className="p-4 bg-gray-200">
+      <ul className="flex space-x-4 pb-4">
         <button>
           <li
             onClick={() => handleClick(1)}
@@ -92,8 +97,8 @@ const Tabs = () => {
         contents={updateContents}
         tried={updateTried}
       />
-      <Code active={toggle === 2 ? "block" : "hidden"} />
-      <Console active={toggle === 3 ? "block" : "hidden"} input={inputText} />
+      <Code active={toggle === 2 ? "block" : "hidden"} input={codeText} />
+      <Console active={toggle === 3 ? "block" : "hidden"} input={consoleText} />
       <Preview
         question={question}
         url={url}
@@ -102,6 +107,8 @@ const Tabs = () => {
         contents={contents}
         tried={tried}
         active={toggle === 4 ? "block" : "hidden"}
+        code={codeText}
+        console={consoleText}
       />
     </div>
   );
