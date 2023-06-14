@@ -15,4 +15,6 @@ export type Form = {
     contents: string;
     tried: string;
     active: string;
+    code: string;
+    console: string;
 };

@@ -2,7 +2,7 @@ import { Input } from "../types/Form";
 
 const Questions = ({ active, url, title, expect, contents, tried }: Input) => {
   return (
-    <div className={active}>
+    <div className={`${active} overflow-y-auto h-96`}>
       <form>
         <div className="pb-6">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
