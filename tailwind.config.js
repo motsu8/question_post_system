@@ -9,7 +9,8 @@ export default {
       },
       colors: {
         "discord": "#2E3035",
-        "discord-code": "#2B2D31"
+        "discord-code": "#2B2D31",
+        "recursion": "#1976d2"
       },
       animation: {
         "text-pop-up-tl":
