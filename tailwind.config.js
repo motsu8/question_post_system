@@ -7,6 +7,10 @@ export default {
         800: "48rem",
         600: "37rem",
       },
+      colors: {
+        "discord": "#2E3035",
+        "discord-code": "#2B2D31"
+      },
       animation: {
         "text-pop-up-tl":
           "text-pop-up-tl 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275)    forwards",
