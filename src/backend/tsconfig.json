@@ -6,8 +6,7 @@
     "lib": ["ES2015","DOM"],
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
-    "rootDir": ".",
+    "rootDir": "../",
     "outDir": "../../extension",
   },
-  "include": ["."]
 }
