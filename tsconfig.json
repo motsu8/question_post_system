@@ -6,4 +6,7 @@
       "path": "src/content"
     },
   ],
+  "exclude": [
+    "."
+  ]
 }

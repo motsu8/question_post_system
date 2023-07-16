@@ -2,6 +2,7 @@
   "name": "vite-qsystem",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "tsc": "npx tsc -b",
@@ -47,5 +48,10 @@
   "volta": {
     "node": "18.16.1",
     "npm": "9.8.0"
-  }
+  },
+  "eslintIgnore": [
+    "/.eslintrc.cjs",
+    "/prettier.config.mjs",
+    "/vite.config.ts"
+  ]
 }

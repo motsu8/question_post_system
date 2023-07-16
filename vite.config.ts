@@ -13,7 +13,7 @@ export default defineConfig({
   publicDir,
   build: {
     outDir,
-    emptyOutDir: false,
+    emptyOutDir: true,
     rollupOptions: {
       input: {
         browser: resolve(root, "index.html"),

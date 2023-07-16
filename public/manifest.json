@@ -8,7 +8,7 @@
     "nativeMessaging"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "backend/background.js"
   },
   "action": {
     "default_popup": "index.html"
@@ -17,7 +17,7 @@
     {
       "matches": ["https://recursionist.io/dashboard/*/*"],
       "run_at": "document_idle",
-      "js": ["content.js"]
+      "js": ["content/content.js"]
     }
   ]
 }
