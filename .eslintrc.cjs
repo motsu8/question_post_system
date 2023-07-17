@@ -3,8 +3,8 @@ module.exports = {
   extends: [
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
-    "airbnb-base",
-    "airbnb-typescript/base",
+    "airbnb",
+    "airbnb-typescript",
     "eslint:recommended",
     "prettier",
   ],
@@ -12,11 +12,12 @@ module.exports = {
   parserOptions: {
     ecmaVersion: "latest",
     sourceType: "module",
-    project: "./tsconfig.json",
+    project: "./src/tsconfig.eslint.json"
   },
   plugins: ["@typescript-eslint", "react-refresh"],
   rules: {
     "react-refresh/only-export-components": "warn",
+    "@typescript-eslint/ban-types": "warn",
     'import/no-extraneous-dependencies': ['error', {
       devDependencies: ['**/vite.config.ts'], 
       optionalDependencies: false,
