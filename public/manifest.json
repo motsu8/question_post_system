@@ -7,11 +7,11 @@
     "tabs",
     "nativeMessaging"
   ],
+  "action": {
+    "title": "question_post_to_discord"
+  },
   "background": {
     "service_worker": "backend/background.js"
-  },
-  "action": {
-    "default_popup": "index.html"
   },
   "content_scripts": [
     {

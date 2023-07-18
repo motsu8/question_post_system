@@ -1,6 +1,14 @@
 chrome.runtime.onMessage.addListener((obj, sender, response) => {
-  console.log("connect!");
   console.log(sender.id);
+  if (obj.message === "getScreen") {
+    const responseObj = {
+      width: window.screen.width,
+      screenHeight: window.outerHeight,
+    };
+    console.log(responseObj);
+    response(responseObj);
+  }
+
   if (obj.message === "text request") {
     // question_title
     const titled = document.querySelector("h4")?.innerText;
