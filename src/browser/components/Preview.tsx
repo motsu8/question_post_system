@@ -1,20 +1,9 @@
+import React from "react";
 import { Form } from "../types/Form";
 
-const Preview = ({
-  question,
-  url,
-  title,
-  expect,
-  contents,
-  tried,
-  active,
-  code,
-  console,
-}: Form) => {
+function Preview({ question, url, title, expect, contents, tried, active, code, console }: Form) {
   return (
-    <div
-      className={`${active} bg-discord rounded-lg p-7 text-sm overflow-y-auto h-96`}
-    >
+    <div className={`${active} bg-discord rounded-lg p-7 text-sm overflow-y-auto h-96`}>
       <div className="flex space-x-3 text-slate-50">
         <div className="icon rounded-full bg-slate-50 w-10 h-10 flex justify-center items-center">
           <div>img</div>
@@ -50,8 +39,8 @@ const Preview = ({
             cols={80}
             placeholder={code}
             disabled
-          ></textarea>
-          <br></br>
+          />
+          <br />
           <p>console</p>
           <textarea
             className="bg-discord-code border border-neutral-900 p-3 rounded-md drop-shadow-lg"
@@ -59,11 +48,11 @@ const Preview = ({
             cols={80}
             placeholder={console}
             disabled
-          ></textarea>
+          />
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default Preview;

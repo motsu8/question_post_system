@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+
+import React, { useState } from "react";
 import Questions from "./Questions";
 import useForms from "../hooks/Forms";
 import Code from "./Code";
@@ -7,17 +8,9 @@ import Console from "./Console";
 import Preview from "./Preview";
 import { getUrl, getConsoleText, getTitle, getCodeText } from "./inputData";
 
-const Tabs = () => {
-  const {
-    title,
-    expect,
-    contents,
-    tried,
-    updateTitle,
-    updateExpect,
-    updateContents,
-    updateTried,
-  } = useForms();
+function Tabs() {
+  const { title, expect, contents, tried, updateTitle, updateExpect, updateContents, updateTried } =
+    useForms();
   const [toggle, setToggle] = useState(1);
   const [url, setUrl] = useState("");
   const [consoleText, setConsoleText] = useState("");
@@ -25,8 +18,8 @@ const Tabs = () => {
   const [question, setQuestion] = useState("");
 
   const setUrlHooks = async () => {
-    const url = await getUrl();
-    setUrl(url as string);
+    const gotUrl = await getUrl();
+    setUrl(gotUrl as string);
   };
 
   const setConsoleTextHooks = async () => {
@@ -40,8 +33,8 @@ const Tabs = () => {
   };
 
   const setQuestionHooks = async () => {
-    const title = await getTitle();
-    setQuestion(title as string);
+    const gotTitle = await getTitle();
+    setQuestion(gotTitle as string);
   };
 
   setUrlHooks();
@@ -56,32 +49,36 @@ const Tabs = () => {
   return (
     <div className="p-4 bg-gray-200">
       <ul className="flex space-x-4 pb-4">
-        <button>
+        <button type="button">
           <li
+            aria-hidden="true"
             onClick={() => handleClick(1)}
             className="font-medium hover:text-gray-300"
           >
             質問
           </li>
         </button>
-        <button>
+        <button type="button">
           <li
+            aria-hidden="true"
             onClick={() => handleClick(2)}
             className="font-medium hover:text-gray-300"
           >
             コード
           </li>
         </button>
-        <button>
+        <button type="button">
           <li
+            aria-hidden="true"
             onClick={() => handleClick(3)}
             className="font-medium hover:text-gray-300"
           >
             コンソール
           </li>
         </button>
-        <button>
+        <button type="button">
           <li
+            aria-hidden="true"
             onClick={() => handleClick(4)}
             className="font-medium hover:text-gray-300"
           >
@@ -91,7 +88,7 @@ const Tabs = () => {
       </ul>
       <Questions
         active={toggle === 1 ? "block" : "hidden"}
-        url={question + " : " + url}
+        url={`${question} : ${url}`}
         title={updateTitle}
         expect={updateExpect}
         contents={updateContents}
@@ -112,6 +109,6 @@ const Tabs = () => {
       />
     </div>
   );
-};
+}
 
 export default Tabs;

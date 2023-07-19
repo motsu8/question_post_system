@@ -1,12 +1,8 @@
 {
   "references": [
     {
-      "path": "src/backend"
-    },{
       "path": "src/content"
-    },
+    }
   ],
-  "exclude": [
-    "."
-  ]
+  "exclude": ["."]
 }
