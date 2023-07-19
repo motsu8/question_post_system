@@ -6,7 +6,7 @@ import useForms from "../hooks/Forms";
 import Code from "./Code";
 import Console from "./Console";
 import Preview from "./Preview";
-import { getUrl, getConsoleText, getTitle, getCodeText } from "../../api/inputData";
+import { getUrl, getConsoleText, getTitle, getCodeText } from "./inputData";
 
 function Tabs() {
   const { title, expect, contents, tried, updateTitle, updateExpect, updateContents, updateTried } =
