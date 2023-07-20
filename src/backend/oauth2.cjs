@@ -51,7 +51,7 @@ app.get("/", async ({ query }, response) => {
       userObject = await userResult.body.json();
       emitter.emit("getUser", userObject);
 
-      return response.send("ok");
+      return response.send('<script>window.close();</script>');;
     } catch (error) {
       // NOTE: An unauthorized token will not throw an error
       // tokenResponseData.statusCode will be 401

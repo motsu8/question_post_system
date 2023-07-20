@@ -30,7 +30,7 @@ function DiscordOauth() {
       .then((response) => {
         const { username, discriminator, avatar, id } = response;
         const login = document.getElementById("login") as HTMLElement;
-        imgUrl = `https://cdn.discordapp.com/avatars/${id}/${avatar}.jpeg?size=64`;
+        imgUrl = `https://cdn.discordapp.com/avatars/${id}/${avatar}.jpeg?size=32`;
         insertImgElement(imgUrl);
         toggleDisplay(login);
         document.getElementById("info")!.innerText = `${username}#${discriminator}`;
@@ -54,7 +54,7 @@ function DiscordOauth() {
         id="login"
         type="button"
         onClick={loginAction}
-        className="hidden text-indigo-500 hover:text-indigo-300 font-medium rounded-full text-sm px-4 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="hidden text-indigo-500 hover:text-indigo-300 font-medium rounded-full text-sm px-4 py-2 my-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
       >
         Discordと連携する
       </button>

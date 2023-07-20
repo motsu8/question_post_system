@@ -47,7 +47,7 @@ function Tabs() {
   };
 
   return (
-    <div className="p-4 bg-gray-200">
+    <div className="p-4 bg-gray-200 h-full">
       <ul className="flex space-x-4 pb-4">
         <button type="button">
           <li
