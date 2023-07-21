@@ -1,7 +1,5 @@
 /* eslint-disable */
 
-// TODO supabaseを使ってみる（DBを使いたいため）
-
 const { request } = require("undici");
 const express = require("express");
 const { EventEmitter } = require("events");
@@ -14,6 +12,22 @@ const {
   recursionGuildId,
 } = require("../../public/config.json");
 const cors = require("cors");
+const { Client, Events, GatewayIntentBits } = require('discord.js');
+
+// discord.bot
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+
+const botRequestOption = {
+  method: "GET",
+  headers: {
+    authorization: `Bot ${token}`,
+  },
+};
+
+client.once(Events.ClientReady, c => {
+	console.log(`Ready! Logged in as ${c.user.tag}`);
+});
+
 
 const pcEnv = {
   desktop: 'kbehbejpopkenmgnhpelbgljnepolfah',
@@ -23,12 +37,11 @@ const pcEnv = {
 // サーバーにBOTを追加するURL
 console.log(`https://discord.com/api/oauth2/authorize?client_id=${clientId}&permissions=2064&scope=bot%20applications.commands`)
 
+// Discord OAuth
 const app = express();
 const emitter = new EventEmitter();
 
 const baseUrl = "https://discord.com/api"
-let userObject;
-let guildList;
 let memberObject
 
 app.use(
@@ -69,12 +82,7 @@ app.get("/", async ({ query }, response) => {
           authorization: `${oauthData.token_type} ${oauthData.access_token}`,
         },
       };
-      const botRequestOption = {
-        method: "GET",
-        headers: {
-          authorization: `Bot ${token}`,
-        },
-      };
+
 
       // recursionメンバーオブジェクト
       const memberResult = await request(`${baseUrl}/users/@me/guilds/${recursionGuildId}/member`, userRequestOption);
@@ -96,4 +104,5 @@ app.get("/", async ({ query }, response) => {
   }
 });
 
+client.login(token);
 app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
