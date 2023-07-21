@@ -20,13 +20,16 @@ const pcEnv = {
   note: 'hmodhebjgkhnijinieaamigglbabneea'
 }
 
+// サーバーにBOTを追加するURL
+console.log(`https://discord.com/api/oauth2/authorize?client_id=${clientId}&permissions=2064&scope=bot%20applications.commands`)
+
 const app = express();
 const emitter = new EventEmitter();
 
+const baseUrl = "https://discord.com/api"
 let userObject;
-let guildsList;
-
-console.log(`https://discord.com/api/guilds/${recursionGuildId}/channels`);
+let guildList;
+let memberObject
 
 app.use(
   cors({
@@ -35,10 +38,8 @@ app.use(
 );
 
 app.get("/user", (request, response) => {
-  console.log(userObject);
   response.setHeader("Access-Control-Allow-Origin", "*");
   emitter.once("getUser", (userObject) => {
-    console.log(userObject);
     return response.send(userObject);
   });
 });
@@ -47,7 +48,7 @@ app.get("/", async ({ query }, response) => {
   const { code } = query;
   if (code) {
     try {
-      const tokenResponseData = await request("https://discord.com/api/oauth2/token", {
+      const tokenResponseData = await request(`${baseUrl}/oauth2/token`, {
         method: "POST",
         body: new URLSearchParams({
           client_id: clientId,
@@ -62,26 +63,29 @@ app.get("/", async ({ query }, response) => {
         },
       });
       const oauthData = await tokenResponseData.body.json();
-      const requestOption = {
+      const userRequestOption = {
         method: "GET",
         headers: {
           authorization: `${oauthData.token_type} ${oauthData.access_token}`,
         },
       };
-      console.log(oauthData);
+      const botRequestOption = {
+        method: "GET",
+        headers: {
+          authorization: `Bot ${token}`,
+        },
+      };
 
-      // user
-      const userResult = await request("https://discord.com/api/users/@me", requestOption);
-      userObject = await userResult.body.json();
-      emitter.emit("getUser", userObject);
-
-      // guildのアクセス可能なチャンネルリスト
-      const guildChannels = await request(
-        `https://discord.com/api/guilds/${recursionGuildId}`,
-        requestOption
-      );
-      channelList = await guildChannels.body.json();
-      console.log(channelList);
+      // recursionメンバーオブジェクト
+      const memberResult = await request(`${baseUrl}/users/@me/guilds/${recursionGuildId}/member`, userRequestOption);
+      memberObject = await memberResult.body.json();
+      console.log(memberObject)
+      const responseObject = {
+        username: memberObject.user.display_name,
+        avatar: memberObject.user.avatar,
+        id: memberObject.user.id
+      }
+      emitter.emit('getUser', responseObject)
 
       return response.send("<script>window.close();</script>");
     } catch (error) {

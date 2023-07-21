@@ -4,7 +4,7 @@ function DiscordOauth() {
   let imgUrl;
 
   const url =
-    "https://discord.com/oauth2/authorize?client_id=1130079596839182376&redirect_uri=http%3A%2F%2Flocalhost%3A53134&response_type=code&scope=identify%20guilds%20guilds.members.read";
+    "https://discord.com/api/oauth2/authorize?client_id=1130079596839182376&redirect_uri=http%3A%2F%2Flocalhost%3A53134&response_type=code&scope=guilds.members.read";
 
   const insertImgElement = (imgUrlStr: string) => {
     const target = document.getElementById("avatar");
@@ -28,12 +28,12 @@ function DiscordOauth() {
     })
       .then((res) => res.json())
       .then((response) => {
-        const { username, discriminator, avatar, id } = response;
+        const { username, avatar, id } = response;
         const login = document.getElementById("login") as HTMLElement;
         imgUrl = `https://cdn.discordapp.com/avatars/${id}/${avatar}.jpeg?size=40`;
         insertImgElement(imgUrl);
         toggleDisplay(login);
-        document.getElementById("userName")!.innerText = `${username}#${discriminator}`;
+        document.getElementById("userName")!.innerText = `${username}`;
         console.log(username);
       });
   };
