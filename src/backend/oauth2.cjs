@@ -14,10 +14,11 @@ const {
   recursionGuildId,
 } = require("../../public/config.json");
 const cors = require("cors");
-const { Client, Intents } = require("discord.js");
-const client = new Client({
-  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
-});
+
+const pcEnv = {
+  desktop: 'kbehbejpopkenmgnhpelbgljnepolfah',
+  note: 'hmodhebjgkhnijinieaamigglbabneea'
+}
 
 const app = express();
 const emitter = new EventEmitter();
@@ -29,7 +30,7 @@ console.log(`https://discord.com/api/guilds/${recursionGuildId}/channels`);
 
 app.use(
   cors({
-    origin: "chrome-extension://kbehbejpopkenmgnhpelbgljnepolfah",
+    origin: `chrome-extension://${pcEnv.note}`,
   })
 );
 
@@ -92,9 +93,3 @@ app.get("/", async ({ query }, response) => {
 });
 
 app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
-
-client.on("ready", () => {
-  console.log(`Logged in as ${client.user.tag}`);
-});
-
-client.login(token);

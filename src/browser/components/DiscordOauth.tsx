@@ -30,10 +30,10 @@ function DiscordOauth() {
       .then((response) => {
         const { username, discriminator, avatar, id } = response;
         const login = document.getElementById("login") as HTMLElement;
-        imgUrl = `https://cdn.discordapp.com/avatars/${id}/${avatar}.jpeg?size=32`;
+        imgUrl = `https://cdn.discordapp.com/avatars/${id}/${avatar}.jpeg?size=40`;
         insertImgElement(imgUrl);
         toggleDisplay(login);
-        document.getElementById("info")!.innerText = `${username}#${discriminator}`;
+        document.getElementById("userName")!.innerText = `${username}#${discriminator}`;
         console.log(username);
       });
   };
