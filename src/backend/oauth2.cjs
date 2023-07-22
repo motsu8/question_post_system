@@ -15,7 +15,7 @@ const cors = require("cors");
 const { Client, Events, GatewayIntentBits } = require('discord.js');
 
 // discord.bot
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds]});
 
 const botRequestOption = {
   method: "GET",
@@ -26,8 +26,27 @@ const botRequestOption = {
 
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
-});
+  // クライアントオブジェクトが準備OKとなったとき一度だけ実行されます
+  console.log(`準備OKです! ${c.user.tag}がログインします。`);
 
+  // // サーバーのテキストチャンネルリストを取得
+  // console.log("---サーバーのテキストチャンネルリスト---");
+  const guild = client.guilds.cache.get(recursionGuildId);
+  const textChannels = guild.channels.cache.first()
+  const members = textChannels.members
+  // console.log(members);
+  // console.log("------");
+
+  // // サーバーの特定のテキストチャンネルに参加しているメンバー取得
+  // const members = textChannels.first().members;
+  // console.log(members)
+  // members.each((member) => console.log(member.displayName));
+
+  // roles
+  // const roles = guild.roles.cache.filter(role => role.name === "admin")
+  // roles.each(role => console.log(role))
+  // member.roles.cache.has('役職ID')
+});
 
 const pcEnv = {
   desktop: 'kbehbejpopkenmgnhpelbgljnepolfah',
@@ -46,14 +65,21 @@ let memberObject
 
 app.use(
   cors({
-    origin: `chrome-extension://${pcEnv.note}`,
+    origin: `chrome-extension://${pcEnv.desktop}`,
   })
 );
 
-app.get("/user", (request, response) => {
+app.get("/discord/user", (request, response) => {
   response.setHeader("Access-Control-Allow-Origin", "*");
   emitter.once("getUser", (userObject) => {
     return response.send(userObject);
+  });
+});
+
+app.get("/discord/guild/channel`", (request, response) => {
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  emitter.once("getChannel", (channelObject) => {
+    return response.send(channelObject);
   });
 });
 
@@ -83,17 +109,17 @@ app.get("/", async ({ query }, response) => {
         },
       };
 
-
       // recursionメンバーオブジェクト
       const memberResult = await request(`${baseUrl}/users/@me/guilds/${recursionGuildId}/member`, userRequestOption);
       memberObject = await memberResult.body.json();
-      console.log(memberObject)
       const responseObject = {
         username: memberObject.user.display_name,
         avatar: memberObject.user.avatar,
         id: memberObject.user.id
       }
       emitter.emit('getUser', responseObject)
+
+      // recursionテキストチャンネル
 
       return response.send("<script>window.close();</script>");
     } catch (error) {

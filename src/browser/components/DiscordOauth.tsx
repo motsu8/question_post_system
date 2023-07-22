@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 
+const backendUrl = "http://localhost:53134";
+
 function DiscordOauth() {
   let imgUrl;
 
@@ -19,13 +21,16 @@ function DiscordOauth() {
   };
 
   const loginAction = () => {
-    window.open(url, "_blank");
-    fetch("http://localhost:53134/user", {
+    const fetchOption = {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-    })
+    };
+    window.open(url, "_blank");
+
+    // discord-user
+    fetch(`${backendUrl}/discord/user`, fetchOption)
       .then((res) => res.json())
       .then((response) => {
         const { username, avatar, id } = response;
@@ -36,6 +41,9 @@ function DiscordOauth() {
         document.getElementById("userName")!.innerText = `${username}`;
         console.log(username);
       });
+
+    // discord-guild-channel
+    // fetch(`${backendUrl}/discord/guild/channel`, fetchOption)
   };
 
   // eslint-disable-next-line consistent-return
