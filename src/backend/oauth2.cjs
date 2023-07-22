@@ -12,10 +12,17 @@ const {
   recursionGuildId,
 } = require("../../public/config.json");
 const cors = require("cors");
-const { Client, Events, GatewayIntentBits } = require('discord.js');
+const { Client, Events, GatewayIntentBits, channelLink } = require('discord.js');
+const { channel } = require("diagnostics_channel");
 
 // discord.bot
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ]
+});
 
 const botRequestOption = {
   method: "GET",
@@ -24,8 +31,9 @@ const botRequestOption = {
   },
 };
 
-client.once(Events.ClientReady, c => {
-	console.log(`Ready! Logged in as ${c.user.tag}`);
+// クライアントオブジェクトが準備OKとなったとき一度だけ実行されます
+client.once('ready', async (c) => {
+  console.log(`準備OKです! ${c.user.tag}がログインします。`);
 });
 
 
@@ -43,6 +51,7 @@ const emitter = new EventEmitter();
 
 const baseUrl = "https://discord.com/api"
 let memberObject
+let textChannelObject
 
 app.use(
   cors({
@@ -83,22 +92,40 @@ app.get("/", async ({ query }, response) => {
         },
       };
 
-
       // recursionメンバーオブジェクト
       const memberResult = await request(`${baseUrl}/users/@me/guilds/${recursionGuildId}/member`, userRequestOption);
       memberObject = await memberResult.body.json();
       console.log(memberObject)
+
+      //サーバーのユーザー取得
+      console.log("---サーバーメンバー---");
+      const guild = await client.guilds.fetch(recursionGuildId);
+      const members = await guild.members.list({ limit: 1000, cache: true })
+
+      // userの参加しているテキストチャンネル
+      const channelObjectList = []
+      const channels = await guild.channels.fetch();
+      channels
+        .filter(channel => channel.members.some(member => member.user.id === memberObject.user.id) && channel.type === 0)
+        .each(channel => {
+          const channelObject = {
+            id: channel.id,
+            name: channel.name
+          }
+          channelObjectList.push(channelObject)
+        })
+      console.log(channelObjectList)
+
       const responseObject = {
-        username: memberObject.user.display_name,
+        username: memberObject.user.username,
         avatar: memberObject.user.avatar,
-        id: memberObject.user.id
+        id: memberObject.user.id,
+        channels: channelObjectList
       }
       emitter.emit('getUser', responseObject)
 
       return response.send("<script>window.close();</script>");
     } catch (error) {
-      // NOTE: An unauthorized token will not throw an error
-      // tokenResponseData.statusCode will be 401
       console.error(error);
     }
   }
