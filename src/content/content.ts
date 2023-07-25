@@ -30,6 +30,7 @@ chrome.runtime.onMessage.addListener((obj, sender, response) => {
       code: codeText,
       console: consoleText,
     };
+
     response(resObj);
   }
 });

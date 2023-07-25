@@ -37,7 +37,7 @@ client.once('ready', async (c) => {
 });
 
 const pcEnv = {
-  desktop: 'kbehbejpopkenmgnhpelbgljnepolfah',
+  desktop: 'kmhodbdddpfondeliogfpbfadficglhk',
   note: 'hmodhebjgkhnijinieaamigglbabneea'
 }
 

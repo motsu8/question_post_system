@@ -9,26 +9,18 @@ export async function getUrl(): Promise<string | undefined> {
   return tab.url;
 }
 
-export async function getConsoleText(): Promise<string | undefined> {
+export async function getText(): Promise<TextObj | undefined> {
   const response = await chrome.runtime.sendMessage({
     message: "requestText",
   });
-  return response.console;
+  return response;
 }
 
-export async function getCodeText(): Promise<string | undefined> {
-  const response = await chrome.runtime.sendMessage({
-    message: "requestText",
-  });
-  return response.code;
-}
-
-export async function getTitle(): Promise<string | undefined> {
-  const response = await chrome.runtime.sendMessage({
-    message: "requestText",
-  });
-  return response.title;
-}
+export type TextObj = {
+  title: string;
+  code: string;
+  console: string;
+};
 
 export type Data = {
   url: string;

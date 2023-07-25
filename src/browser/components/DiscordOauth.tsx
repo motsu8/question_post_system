@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 
 const backendUrl = "http://localhost:53134";
+type Channels = {
+  id: string;
+  name: string;
+};
 
 function DiscordOauth() {
   let imgUrl;
@@ -12,7 +16,18 @@ function DiscordOauth() {
     const target = document.getElementById("avatar");
     const imgEle = document.createElement("img");
     imgEle.src = imgUrlStr;
+    imgEle.classList.add("rounded-full");
     target!.append(imgEle);
+  };
+
+  const createTextChannelList = (channels: Channels[]) => {
+    const select = document.getElementById("channels");
+    channels.forEach((channel) => {
+      const option = document.createElement("option");
+      option.value = channel.id;
+      option.innerText = channel.name;
+      select!.append(option);
+    });
   };
 
   const toggleDisplay = (ele: HTMLElement) => {
@@ -33,11 +48,12 @@ function DiscordOauth() {
     fetch(`${backendUrl}/discord/user`, fetchOption)
       .then((res) => res.json())
       .then((response) => {
-        const { username, avatar, id } = response;
+        const { username, avatar, id, channels } = response;
         const login = document.getElementById("login") as HTMLElement;
-        imgUrl = `https://cdn.discordapp.com/avatars/${id}/${avatar}.jpeg?size=40`;
+        imgUrl = `https://cdn.discordapp.com/avatars/${id}/${avatar}.jpeg?size=48`;
         insertImgElement(imgUrl);
         toggleDisplay(login);
+        createTextChannelList(channels);
         document.getElementById("userName")!.innerText = `${username}`;
         console.log(username);
       });
@@ -46,7 +62,6 @@ function DiscordOauth() {
     // fetch(`${backendUrl}/discord/guild/channel`, fetchOption)
   };
 
-  // eslint-disable-next-line consistent-return
   useEffect(() => {
     const fragment = new URLSearchParams(window.location.hash.slice(1));
     const [code] = [fragment.get("code")];
@@ -66,8 +81,18 @@ function DiscordOauth() {
       >
         Discordと連携する
       </button>
-      <div id="avatar" />
-      <div id="userName" />
+      <div id="user" className="flex align-middle">
+        <div id="avatar" />
+        <div id="userName" className="px-3 text-lg font-normal align-text-top" />
+      </div>
+      <div>
+        <select
+          name="channels"
+          aria-label="投稿するチャンネルを表示"
+          id="channels"
+          className="py-3 px-4 block w-full drop-shadow-xl bg-slate-50 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
+        />
+      </div>
     </>
   );
 }

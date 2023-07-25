@@ -6,7 +6,8 @@ import useForms from "../hooks/Forms";
 import Code from "./Code";
 import Console from "./Console";
 import Preview from "./Preview";
-import { getUrl, getConsoleText, getTitle, getCodeText } from "./inputData";
+import { getUrl, getText } from "./inputData";
+// import { getUrl, getConsoleText, getTitle, getCodeText } from "./inputData";
 
 function Tabs() {
   const { title, expect, contents, tried, updateTitle, updateExpect, updateContents, updateTried } =
@@ -17,30 +18,14 @@ function Tabs() {
   const [codeText, setCodeText] = useState("");
   const [question, setQuestion] = useState("");
 
-  const setUrlHooks = async () => {
-    const gotUrl = await getUrl();
-    setUrl(gotUrl as string);
-  };
-
-  const setConsoleTextHooks = async () => {
-    const text = await getConsoleText();
-    setConsoleText(text as string);
-  };
-
-  const setCodeTextHooks = async () => {
-    const text = await getCodeText();
-    setCodeText(text as string);
-  };
-
-  const setQuestionHooks = async () => {
-    const gotTitle = await getTitle();
-    setQuestion(gotTitle as string);
-  };
-
-  setUrlHooks();
-  setConsoleTextHooks();
-  setQuestionHooks();
-  setCodeTextHooks();
+  (async () => {
+    setUrl((await getUrl()) as string);
+    const textObj = await getText();
+    console.log(textObj);
+    setConsoleText(textObj!.console as string);
+    setCodeText(textObj!.code as string);
+    setQuestion(textObj!.title as string);
+  })();
 
   const handleClick = (id: number) => {
     setToggle(id);
