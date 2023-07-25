@@ -8,7 +8,7 @@ import Console from "./Console";
 import Preview from "./Preview";
 import { getUrl, getText, TextObj } from "./inputData";
 
-function Tabs() {
+function Tabs({ active }: { active: string }) {
   const { title, expect, contents, tried, updateTitle, updateExpect, updateContents, updateTried } =
     useForms();
   const [toggle, setToggle] = useState(1);
@@ -33,7 +33,7 @@ function Tabs() {
   };
 
   return (
-    <div className="p-4 bg-gray-200 h-full">
+    <div className={`${active} p-4 bg-gray-200 h-full`}>
       <ul className="flex space-x-4 pb-4">
         <button type="button">
           <li

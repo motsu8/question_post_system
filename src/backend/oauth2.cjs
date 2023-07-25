@@ -65,12 +65,9 @@ app.get("/discord/user", (request, response) => {
   });
 });
 
-app.get("/discord/guild/channel`", (request, response) => {
-  response.setHeader("Access-Control-Allow-Origin", "*");
-  emitter.once("getChannel", (channelObject) => {
-    return response.send(channelObject);
-  });
-});
+app.get('/discord/token', (request, response)=>{
+  console.log(request.body)
+})
 
 app.get("/", async ({ query }, response) => {
   const { code } = query;
@@ -101,10 +98,8 @@ app.get("/", async ({ query }, response) => {
       // recursionメンバーオブジェクト
       const memberResult = await request(`${baseUrl}/users/@me/guilds/${recursionGuildId}/member`, userRequestOption);
       memberObject = await memberResult.body.json();
-      console.log(memberObject)
 
       //サーバーのユーザー取得
-      console.log("---サーバーメンバー---");
       const guild = await client.guilds.fetch(recursionGuildId);
       const members = await guild.members.list({ limit: 1000, cache: true })
 
@@ -120,13 +115,14 @@ app.get("/", async ({ query }, response) => {
           }
           channelObjectList.push(channelObject)
         })
-      console.log(channelObjectList)
+      console.log(oauthData)
 
       const responseObject = {
+        refreshToken: oauthData.refresh_token,
         username: memberObject.user.username,
         avatar: memberObject.user.avatar,
         id: memberObject.user.id,
-        channels: channelObjectList
+        channels: channelObjectList,
       }
       emitter.emit('getUser', responseObject)
 

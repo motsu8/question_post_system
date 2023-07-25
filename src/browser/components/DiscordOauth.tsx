@@ -1,12 +1,19 @@
-import React, { useEffect } from "react";
+import React from "react";
+import DiscordData from "../constants/DiscordData";
+import Backend from "../constants/Backend";
 
-const backendUrl = "http://localhost:53134";
 type Channels = {
   id: string;
   name: string;
 };
 
-function DiscordOauth() {
+function DiscordOauth({
+  active,
+  storage,
+}: {
+  active: string;
+  storage: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   let imgUrl;
 
   const url =
@@ -36,64 +43,42 @@ function DiscordOauth() {
   };
 
   const loginAction = () => {
+    window.open(url, "_blank");
     const fetchOption = {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     };
-    window.open(url, "_blank");
 
     // discord-user
-    fetch(`${backendUrl}/discord/user`, fetchOption)
+    fetch(`${Backend.BASE_URL}/discord/user`, fetchOption)
       .then((res) => res.json())
       .then((response) => {
-        const { username, avatar, id, channels } = response;
+        const { username, avatar, id, channels, refreshToken } = response;
         const login = document.getElementById("login") as HTMLElement;
         imgUrl = `https://cdn.discordapp.com/avatars/${id}/${avatar}.jpeg?size=48`;
         insertImgElement(imgUrl);
         toggleDisplay(login);
         createTextChannelList(channels);
         document.getElementById("userName")!.innerText = `${username}`;
-        console.log(username);
-      });
 
-    // discord-guild-channel
-    // fetch(`${backendUrl}/discord/guild/channel`, fetchOption)
+        console.log(refreshToken);
+
+        localStorage.setItem(DiscordData.REFRESH_TOKEN, refreshToken);
+        storage(localStorage.getItem(DiscordData.REFRESH_TOKEN) !== null);
+      });
   };
 
-  useEffect(() => {
-    const fragment = new URLSearchParams(window.location.hash.slice(1));
-    const [code] = [fragment.get("code")];
-    if (!code) {
-      const login = document.getElementById("login") as HTMLElement;
-      toggleDisplay(login);
-    }
-  });
-
   return (
-    <>
-      <button
-        id="login"
-        type="button"
-        onClick={loginAction}
-        className="hidden text-indigo-500 hover:text-indigo-300 font-medium rounded-full text-sm px-4 py-2 my-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-      >
-        Discordと連携する
-      </button>
-      <div id="user" className="flex align-middle">
-        <div id="avatar" />
-        <div id="userName" className="px-3 text-lg font-normal align-text-top" />
-      </div>
-      <div>
-        <select
-          name="channels"
-          aria-label="投稿するチャンネルを表示"
-          id="channels"
-          className="py-3 px-4 block w-full drop-shadow-xl bg-slate-50 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
-        />
-      </div>
-    </>
+    <button
+      id="login"
+      type="button"
+      onClick={loginAction}
+      className={`${active} text-indigo-500 hover:text-indigo-300 font-bold rounded-full text-5xl px-4 py-2 my-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
+    >
+      Discordと連携する
+    </button>
   );
 }
 
