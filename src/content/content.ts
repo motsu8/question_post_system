@@ -1,5 +1,5 @@
 chrome.runtime.onMessage.addListener((obj, sender, response) => {
-  console.log(sender);
+  console.log(`${sender}`);
   if (obj.message === "getScreen") {
     const responseObj = {
       width: window.screen.width,

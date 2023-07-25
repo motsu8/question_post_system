@@ -23,6 +23,7 @@ chrome.action.onClicked.addListener((tab) => {
       chrome.runtime.onMessage.addListener((obj, sender, response) => {
         console.log(`sender: ${sender}`);
         if (obj.message === "requestText") {
+          console.log(pageText);
           response(pageText);
         } else if (obj.message === "requestQuestionTab") {
           response(tab);

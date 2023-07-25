@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Questions from "./Questions";
 import useForms from "../hooks/Forms";
 import Code from "./Code";
 import Console from "./Console";
 import Preview from "./Preview";
-import { getUrl, getText } from "./inputData";
-// import { getUrl, getConsoleText, getTitle, getCodeText } from "./inputData";
+import { getUrl, getText, TextObj } from "./inputData";
 
 function Tabs() {
   const { title, expect, contents, tried, updateTitle, updateExpect, updateContents, updateTried } =
@@ -18,14 +17,16 @@ function Tabs() {
   const [codeText, setCodeText] = useState("");
   const [question, setQuestion] = useState("");
 
-  (async () => {
-    setUrl((await getUrl()) as string);
-    const textObj = await getText();
-    console.log(textObj);
-    setConsoleText(textObj!.console as string);
-    setCodeText(textObj!.code as string);
-    setQuestion(textObj!.title as string);
-  })();
+  useEffect(() => {
+    (async () => {
+      setUrl((await getUrl()) as string);
+      const textObj = (await getText()) as TextObj;
+      console.log(textObj);
+      setConsoleText(textObj.console);
+      setCodeText(textObj.code);
+      setQuestion(textObj.title);
+    })();
+  }, []);
 
   const handleClick = (id: number) => {
     setToggle(id);
