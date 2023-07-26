@@ -26,7 +26,7 @@ const client = new Client({
 // クライアントオブジェクトが準備OKとなったとき一度だけ実行されます
 client.once("ready", async (c) => {
   console.log(`準備OKです! ${c.user.tag}がログインします。`);
-  console.log(client.user.username)
+  console.log(client.user)
 });
 
 const pcEnv = {
@@ -88,15 +88,20 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
     });
 
   const responseObject = {
+    member: {
+      name: memberObject.user.username,
+      avatar: memberObject.user.avatar,
+      id: memberObject.user.id,
+    },
     bot: {
       name: client.user.username,
-      avatar: client.user.avatar
+      avatar: client.user.avatar,
+      id: client.user.id
     },
-    accessToken,
-    refreshToken,
-    username: memberObject.user.username,
-    avatar: memberObject.user.avatar,
-    id: memberObject.user.id,
+    tokens: {
+      accessToken,
+      refreshToken,
+    },
     channels: channelObjectList,
   };
   console.log(responseObject)

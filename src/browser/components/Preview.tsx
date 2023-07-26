@@ -1,17 +1,41 @@
 import React from "react";
-import { Form } from "../types/Form";
+import { PreviewType } from "../types/Components";
+import { createImageUrl } from "../utils/domScripts";
 
-function Preview({ question, url, title, expect, contents, tried, active, code, console }: Form) {
+function Preview({
+  question,
+  url,
+  title,
+  expect,
+  contents,
+  tried,
+  active,
+  code,
+  console,
+  botData,
+  member,
+}: PreviewType) {
   return (
-    <div className={`${active} bg-discord rounded-lg p-7 text-sm overflow-y-auto h-1/3`}>
-      <div className="flex space-x-3 text-slate-50">
-        <div className="icon rounded-full bg-slate-50 w-10 h-10 flex justify-center items-center">
-          <div>img</div>
+    <div className={`${active} bg-discord rounded-lg p-7 text-sm overflow-y-auto`}>
+      <div className="flex align-top space-x-3 text-slate-50">
+        <div id="botAvatar" className="w-12 h-12">
+          <img
+            className="object-cover rounded-full"
+            src={`${createImageUrl(botData.id, botData.avatar)}}`}
+            alt="botAvatar"
+          />
         </div>
         <div id="text">
-          <div className="userName font-bold">motsu</div>
-          <div>{question}</div>
-          <div>{url}</div>
+          <div id="botName" className="font-bold text-lg">
+            {botData.name}
+          </div>
+          <div className="flex space-x-1">
+            <div className="bg-mention rounded">{`@${member.name}`}</div>
+            <div>からの質問です!</div>
+          </div>
+          <div>
+            {question} : {url}
+          </div>
           <p>----------------------</p>
           <div className="flex flex-col space-y-3">
             <div className={title === "" ? "hidden" : "block"}>

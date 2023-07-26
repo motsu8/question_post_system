@@ -6,9 +6,10 @@ import useForms from "../hooks/Forms";
 import Code from "./Code";
 import Console from "./Console";
 import Preview from "./Preview";
-import { getUrl, getText, TextObj } from "./inputData";
+import { getUrl, getText } from "../utils/contentScripts";
+import { Client, TextObj } from "../types/data";
 
-function Tabs() {
+function Tabs({ botData, member }: { botData: Client; member: Client }) {
   const { title, expect, contents, tried, updateTitle, updateExpect, updateContents, updateTried } =
     useForms();
   const [toggle, setToggle] = useState(1);
@@ -33,7 +34,7 @@ function Tabs() {
   };
 
   return (
-    <div className="p-4 bg-gray-200 h-fit">
+    <div className="p-4 bg-gray-200 h-9/10">
       <ul className="flex space-x-4 pb-4">
         <button type="button">
           <li
@@ -83,6 +84,8 @@ function Tabs() {
       <Code active={toggle === 2 ? "block" : "hidden"} input={codeText} />
       <Console active={toggle === 3 ? "block" : "hidden"} input={consoleText} />
       <Preview
+        botData={botData}
+        member={member}
         question={question}
         url={url}
         title={title}
