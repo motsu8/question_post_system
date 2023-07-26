@@ -1,10 +1,10 @@
 import React from "react";
-import DiscordOauth from "./DiscordOauth";
+import DiscordUser from "./DiscordUser";
 
 function Header() {
   return (
-    <div className="flex justify-between align-middle p-1 m-3 h-fit">
-      <DiscordOauth />
+    <div className="flex justify-between align-middle p-4 h-fit">
+      <DiscordUser />
       <button
         id="question"
         type="submit"

@@ -12,8 +12,7 @@ const {
   recursionGuildId,
 } = require("../../public/config.json");
 const cors = require("cors");
-const { Client, Events, GatewayIntentBits, channelLink } = require('discord.js');
-const { channel } = require("diagnostics_channel");
+const { Client, Events, GatewayIntentBits, channelLink } = require("discord.js");
 
 // discord.bot
 const client = new Client({
@@ -21,36 +20,29 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
-  ]
+  ],
 });
 
-const botRequestOption = {
-  method: "GET",
-  headers: {
-    authorization: `Bot ${token}`,
-  },
-};
-
 // クライアントオブジェクトが準備OKとなったとき一度だけ実行されます
-client.once('ready', async (c) => {
+client.once("ready", async (c) => {
   console.log(`準備OKです! ${c.user.tag}がログインします。`);
 });
 
 const pcEnv = {
-  desktop: 'kmhodbdddpfondeliogfpbfadficglhk',
-  note: 'hmodhebjgkhnijinieaamigglbabneea'
-}
+  desktop: "kmhodbdddpfondeliogfpbfadficglhk",
+  note: "hmodhebjgkhnijinieaamigglbabneea",
+};
 
 // サーバーにBOTを追加するURL
-console.log(`https://discord.com/api/oauth2/authorize?client_id=${clientId}&permissions=2064&scope=bot%20applications.commands`)
+console.log(
+  `https://discord.com/api/oauth2/authorize?client_id=${clientId}&permissions=2064&scope=bot%20applications.commands`
+);
 
 // Discord OAuth
 const app = express();
 const emitter = new EventEmitter();
 
-const baseUrl = "https://discord.com/api"
-let memberObject
-let textChannelObject
+const baseUrl = "https://discord.com/api";
 
 app.use(
   cors({
@@ -65,11 +57,81 @@ app.get("/discord/user", (request, response) => {
   });
 });
 
-app.get("/discord/guild/channel`", (request, response) => {
-  response.setHeader("Access-Control-Allow-Origin", "*");
-  emitter.once("getChannel", (channelObject) => {
-    return response.send(channelObject);
-  });
+const getResponseObject = async (authorization, refreshToken) => {
+  const requestOption = {
+    method: "GET",
+    headers: {
+      authorization,
+    },
+  };
+
+  // recursionメンバーオブジェクト
+  const memberResult = await request(
+    `${baseUrl}/users/@me/guilds/${recursionGuildId}/member`,
+    requestOption
+  );
+  const memberObject = await memberResult.body.json();
+  console.log(memberObject)
+
+  //サーバーのユーザー取得
+  const guild = await client.guilds.fetch(recursionGuildId);
+  const members = await guild.members.list({ limit: 1000, cache: true });
+
+  // userの参加しているテキストチャンネル
+  const channelObjectList = [];
+  const channels = await guild.channels.fetch();
+  channels
+    .filter(
+      (channel) =>
+        channel.members.some((member) => member.user.id === memberObject.user.id) &&
+        channel.type === 0
+    )
+    .each((channel) => {
+      const channelObject = {
+        id: channel.id,
+        name: channel.name,
+      };
+      channelObjectList.push(channelObject);
+    });
+
+  const responseObject = {
+    refreshToken,
+    username: memberObject.user.username,
+    avatar: memberObject.user.avatar,
+    id: memberObject.user.id,
+    channels: channelObjectList,
+  };
+  return responseObject;
+};
+
+app.get("/discord/token", async ({ query }, response) => {
+  console.log(query);
+  const { refresh_token } = query;
+  if (refresh_token) {
+    try {
+      const refreshTokenResponseData = await request(`${baseUrl}/oauth2/token`, {
+        method: "POST",
+        body: new URLSearchParams({
+          client_id: clientId,
+          client_secret: clientSecret,
+          grant_type: "refresh_token",
+          refresh_token: refresh_token,
+          redirect_uri: `http://localhost:${port}`,
+        }).toString(),
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+      const refreshData = await refreshTokenResponseData.body.json();
+      console.log(refreshData)
+      const responseObject = await getResponseObject(`${refreshData.token_type} ${refreshData.access_token}`, refreshData.refresh_token);
+
+      response.send(responseObject);
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
 });
 
 app.get("/", async ({ query }, response) => {
@@ -91,46 +153,9 @@ app.get("/", async ({ query }, response) => {
         },
       });
       const oauthData = await tokenResponseData.body.json();
-      const userRequestOption = {
-        method: "GET",
-        headers: {
-          authorization: `${oauthData.token_type} ${oauthData.access_token}`,
-        },
-      };
+      const responseObject = await getResponseObject(`${oauthData.token_type} ${oauthData.access_token}`, oauthData.refresh_token)
 
-      // recursionメンバーオブジェクト
-      const memberResult = await request(`${baseUrl}/users/@me/guilds/${recursionGuildId}/member`, userRequestOption);
-      memberObject = await memberResult.body.json();
-      console.log(memberObject)
-
-      //サーバーのユーザー取得
-      console.log("---サーバーメンバー---");
-      const guild = await client.guilds.fetch(recursionGuildId);
-      const members = await guild.members.list({ limit: 1000, cache: true })
-
-      // userの参加しているテキストチャンネル
-      const channelObjectList = []
-      const channels = await guild.channels.fetch();
-      channels
-        .filter(channel => channel.members.some(member => member.user.id === memberObject.user.id) && channel.type === 0)
-        .each(channel => {
-          const channelObject = {
-            id: channel.id,
-            name: channel.name
-          }
-          channelObjectList.push(channelObject)
-        })
-      console.log(channelObjectList)
-
-      const responseObject = {
-        username: memberObject.user.username,
-        avatar: memberObject.user.avatar,
-        id: memberObject.user.id,
-        channels: channelObjectList
-      }
-      emitter.emit('getUser', responseObject)
-
-      // recursionテキストチャンネル
+      emitter.emit("getUser", responseObject);
 
       return response.send("<script>window.close();</script>");
     } catch (error) {
