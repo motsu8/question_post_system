@@ -26,6 +26,7 @@ const client = new Client({
 // クライアントオブジェクトが準備OKとなったとき一度だけ実行されます
 client.once("ready", async (c) => {
   console.log(`準備OKです! ${c.user.tag}がログインします。`);
+  console.log(client.user.username)
 });
 
 const pcEnv = {
@@ -50,14 +51,7 @@ app.use(
   })
 );
 
-app.get("/discord/user", (request, response) => {
-  response.setHeader("Access-Control-Allow-Origin", "*");
-  emitter.once("getUser", (userObject) => {
-    return response.send(userObject);
-  });
-});
-
-const getResponseObject = async (authorization, refreshToken) => {
+const getResponseObject = async (authorization, refreshToken, accessToken) => {
   const requestOption = {
     method: "GET",
     headers: {
@@ -71,7 +65,6 @@ const getResponseObject = async (authorization, refreshToken) => {
     requestOption
   );
   const memberObject = await memberResult.body.json();
-  console.log(memberObject)
 
   //サーバーのユーザー取得
   const guild = await client.guilds.fetch(recursionGuildId);
@@ -95,17 +88,38 @@ const getResponseObject = async (authorization, refreshToken) => {
     });
 
   const responseObject = {
+    bot: {
+      name: client.user.username,
+      avatar: client.user.avatar
+    },
+    accessToken,
     refreshToken,
     username: memberObject.user.username,
     avatar: memberObject.user.avatar,
     id: memberObject.user.id,
     channels: channelObjectList,
   };
+  console.log(responseObject)
   return responseObject;
 };
 
-app.get("/discord/token", async ({ query }, response) => {
-  console.log(query);
+app.get("/discord/user", async ({ query }, response) => {
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  const { accessToken, refreshToken } = query;
+  const authorization = `Bearer ${accessToken}`
+  const responseObject = await getResponseObject(authorization, refreshToken, accessToken);
+  console.log(responseObject)
+  response.send(responseObject)
+});
+
+app.get("/discord/oauth/user", (request, response) => {
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  emitter.once("getUser", (tokenObject) => {
+    return response.send(tokenObject);
+  });
+});
+
+app.get("/discord/refresh", async ({ query }, response) => {
   const { refresh_token } = query;
   if (refresh_token) {
     try {
@@ -123,11 +137,13 @@ app.get("/discord/token", async ({ query }, response) => {
         },
       });
       const refreshData = await refreshTokenResponseData.body.json();
-      console.log(refreshData)
-      const responseObject = await getResponseObject(`${refreshData.token_type} ${refreshData.access_token}`, refreshData.refresh_token);
+      const responseObject = await getResponseObject(
+        `${refreshData.token_type} ${refreshData.access_token}`,
+        refreshData.refresh_token,
+        refreshData.access_token
+      );
 
       response.send(responseObject);
-
     } catch (error) {
       console.error(error);
     }
@@ -153,7 +169,10 @@ app.get("/", async ({ query }, response) => {
         },
       });
       const oauthData = await tokenResponseData.body.json();
-      const responseObject = await getResponseObject(`${oauthData.token_type} ${oauthData.access_token}`, oauthData.refresh_token)
+      const responseObject = {
+        accessToken: oauthData.access_token,
+        refreshToken: oauthData.refresh_token
+      }
 
       emitter.emit("getUser", responseObject);
 

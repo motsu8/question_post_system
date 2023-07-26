@@ -11,17 +11,22 @@ function App() {
 
   useEffect(() => {
     const refresh = localStorage.getItem(DiscordData.REFRESH_TOKEN);
+    const token = localStorage.getItem(DiscordData.ACCESS_TOKEN);
     let ignore = false;
 
     // localStorageにrefreshTokenがない場合、認証表示
     if (refresh === null) setDraw(false);
-    else {
+    else if (refresh !== null && token !== null) {
       setDraw(true);
 
-      const queryParams = new URLSearchParams({ refresh_token: refresh }).toString();
-      // refreshTokenを使用してユーザーデータを取得する
+      // accessTokenを使用してユーザーデータを取得する
       if (!ignore) {
-        fetch(`${Backend.BASE_URL}/discord/token?${queryParams}`, {
+        const queryParams = new URLSearchParams({
+          refreshToken: refresh,
+          accessToken: token,
+        }).toString();
+
+        fetch(`${Backend.BASE_URL}/discord/user?${queryParams}`, {
           method: "GET",
         })
           .then((res) => res.json())

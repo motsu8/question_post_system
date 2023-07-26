@@ -5,7 +5,6 @@ function DiscordUser() {
     <>
       <div id="user" className="flex align-middle">
         <div id="avatar" />
-        <div id="userName" className="px-3 text-lg font-normal align-text-top" />
       </div>
       <div>
         <select

@@ -17,20 +17,21 @@ export async function getText(): Promise<TextObj | undefined> {
 }
 
 export const insertImgElement = (imgUrlStr: string) => {
-  const target = document.getElementById("avatar");
+  const target = document.getElementById("avatar") as HTMLElement;
+  target.innerHTML = "";
   const imgEle = document.createElement("img");
   imgEle.src = imgUrlStr;
   imgEle.classList.add("rounded-full");
-  target!.append(imgEle);
+  target.append(imgEle);
 };
 
 export const createTextChannelList = (channels: Channels[]) => {
-  const select = document.getElementById("channels");
+  const select = document.getElementById("channels") as HTMLElement;
   channels.forEach((channel) => {
     const option = document.createElement("option");
     option.value = channel.id;
     option.innerText = channel.name;
-    select!.append(option);
+    select.append(option);
   });
 };
 
