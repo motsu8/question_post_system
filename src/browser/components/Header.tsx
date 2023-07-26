@@ -1,9 +1,9 @@
 import React from "react";
 import DiscordUser from "./DiscordUser";
 
-function Header({ active }: { active: string }) {
+function Header() {
   return (
-    <div className={`${active} flex justify-between align-middle p-4 h-fit`}>
+    <div className="flex justify-between align-middle p-4 h-fit">
       <DiscordUser />
       <button
         id="question"

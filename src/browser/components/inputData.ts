@@ -16,6 +16,29 @@ export async function getText(): Promise<TextObj | undefined> {
   return response;
 }
 
+export const insertImgElement = (imgUrlStr: string) => {
+  const target = document.getElementById("avatar");
+  const imgEle = document.createElement("img");
+  imgEle.src = imgUrlStr;
+  imgEle.classList.add("rounded-full");
+  target!.append(imgEle);
+};
+
+export const createTextChannelList = (channels: Channels[]) => {
+  const select = document.getElementById("channels");
+  channels.forEach((channel) => {
+    const option = document.createElement("option");
+    option.value = channel.id;
+    option.innerText = channel.name;
+    select!.append(option);
+  });
+};
+
+type Channels = {
+  id: string;
+  name: string;
+};
+
 export type TextObj = {
   title: string;
   code: string;
