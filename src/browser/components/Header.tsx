@@ -1,10 +1,11 @@
 import React from "react";
 import DiscordUser from "./DiscordUser";
+import { Channels, Client } from "../types/data";
 
-function Header() {
+function Header({ member, channels }: { member: Client; channels: Channels[] }) {
   return (
-    <div className="flex justify-between align-middle p-4 h-fit">
-      <DiscordUser />
+    <div className="flex justify-between align-middle p-4 h-1/10">
+      <DiscordUser member={member} channels={channels} />
       <button
         id="question"
         type="submit"

@@ -1,5 +1,5 @@
 import React from "react";
-import { Input } from "../types/Form";
+import { Input } from "../types/Components";
 
 function Questions({ active, url, title, expect, contents, tried }: Input) {
   return (
