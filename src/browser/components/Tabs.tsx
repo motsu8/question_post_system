@@ -33,7 +33,7 @@ function Tabs({ active }: { active: string }) {
   };
 
   return (
-    <div className={`${active} p-4 bg-gray-200 h-full`}>
+    <div className={`${active} p-4 bg-gray-200 h-fit`}>
       <ul className="flex space-x-4 pb-4">
         <button type="button">
           <li

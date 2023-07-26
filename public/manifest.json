@@ -8,7 +8,7 @@
     "title": "question_post_to_discord"
   },
   "background": {
-    "service_worker": "content/background.js"
+    "service_worker": "contents/background.js"
   },
   "declarative_net_request": {
     "rule_resources": [
@@ -27,7 +27,7 @@
     {
       "matches": ["https://recursionist.io/dashboard/*/*"],
       "run_at": "document_idle",
-      "js": ["content/content.js"]
+      "js": ["contents/content.js"]
     }
   ]
 }

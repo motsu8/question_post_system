@@ -3,7 +3,7 @@ import DiscordUser from "./DiscordUser";
 
 function Header({ active }: { active: string }) {
   return (
-    <div className={`${active} flex justify-between align-middle p-1 m-3 h-fit`}>
+    <div className={`${active} flex justify-between align-middle p-4 h-fit`}>
       <DiscordUser />
       <button
         id="question"

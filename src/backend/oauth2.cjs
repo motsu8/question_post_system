@@ -66,6 +66,7 @@ app.get("/discord/user", (request, response) => {
 });
 
 app.get('/discord/token', (request, response)=>{
+  console.log('get')
   console.log(request.body)
 })
 

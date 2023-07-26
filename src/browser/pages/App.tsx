@@ -9,27 +9,30 @@ function App() {
   const [draw, setDraw] = useState(false);
 
   useEffect(() => {
-    console.log("change!!!");
     const refreshToken = localStorage.getItem(DiscordData.REFRESH_TOKEN);
-    console.log(draw);
+
     // localStorageにrefreshTokenがない場合、認証表示
     if (refreshToken === null) setDraw(false);
     else {
       setDraw(true);
+
+      // refreshTokenを使用してユーザーデータを取得する
       fetch(`${Backend.BASE_URL}/discord/token`, {
         method: "GET",
         body: refreshToken,
-      }).then((res) => {
-        res.json();
-      });
+      })
+        .then((res) => res.json())
+        .then((response) => console.log(response));
     }
   }, [draw]);
 
   return (
     <>
       <DiscordOauth active={draw ? "hidden" : "block"} storage={setDraw} />
-      <Header active={draw ? "block" : "hidden"} />
-      <Tabs active={draw ? "block" : "hidden"} />
+      <div className="h-screen">
+        <Header active={draw ? "block" : "hidden"} />
+        <Tabs active={draw ? "block" : "hidden"} />
+      </div>
     </>
   );
 }
