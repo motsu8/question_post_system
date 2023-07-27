@@ -26,7 +26,6 @@ const client = new Client({
 // クライアントオブジェクトが準備OKとなったとき一度だけ実行されます
 client.once("ready", async (c) => {
   console.log(`準備OKです! ${c.user.tag}がログインします。`);
-  console.log(client.user)
 });
 
 const pcEnv = {
@@ -51,6 +50,45 @@ app.use(
   })
 );
 
+const createCodeBlock = (code) => "```" + code + "```";
+
+const createQuestionString = (elements) => {
+  const {
+    userId,
+    final_question,
+    final_title,
+    final_url,
+    final_expect,
+    final_contents,
+    final_tried,
+    final_codeText,
+    final_consoleText,
+  } = elements;
+
+  const postQuestion = [
+    `<@${userId}> からの質問です！`,
+    `${final_question} : ${final_url}`,
+    `---------------------`,
+    `${final_title ? "**タイトル**" : ""}`,
+    `${final_title ? final_title + '\n' : ""}`,
+    `${final_expect ? "**期待する動作**" : ""}`,
+    `${final_expect ? final_expect + '\n' : ""}`,
+    `${final_contents ? "**内容**" : ""}`,
+    `${final_contents ? final_contents + '\n' : ""}`,
+    `${final_tried ? "**試したこと**" : ""}`,
+    `${final_tried ? final_tried : ""}`,
+    `---------------------`,
+    `${final_codeText ? "**code**" : ""}`,
+    `${createCodeBlock(final_codeText)}`,
+    `${final_codeText ? "**console**" : ""}`,
+    `${createCodeBlock(final_consoleText)}`,
+  ];
+
+  console.log(postQuestion.filter(text => text !== ''))
+
+  return postQuestion.filter((text) => text !== "").join("\n");
+};
+
 const getResponseObject = async (authorization, refreshToken, accessToken) => {
   const requestOption = {
     method: "GET",
@@ -65,6 +103,13 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
     requestOption
   );
   const memberObject = await memberResult.body.json();
+  console.log(memberObject);
+
+  // エラーメッセージがある場合、そのオブジェクトを返す
+  if (memberObject.message) {
+    console.log(memberObject.message);
+    return memberObject;
+  }
 
   //サーバーのユーザー取得
   const guild = await client.guilds.fetch(recursionGuildId);
@@ -96,7 +141,7 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
     bot: {
       name: client.user.username,
       avatar: client.user.avatar,
-      id: client.user.id
+      id: client.user.id,
     },
     tokens: {
       accessToken,
@@ -104,17 +149,26 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
     },
     channels: channelObjectList,
   };
-  console.log(responseObject)
   return responseObject;
 };
+
+app.post("/discord/question", async ({ query }, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+
+  const guild = await client.guilds.fetch(recursionGuildId);
+  const channel = await guild.channels.fetch(query.channelId);
+  channel.send(createQuestionString(query));
+
+  if (!channel) return res.status(400).json({ error: "Invalid channel ID." });
+  res.status(200).json({ message: "Message sent successfully." });
+});
 
 app.get("/discord/user", async ({ query }, response) => {
   response.setHeader("Access-Control-Allow-Origin", "*");
   const { accessToken, refreshToken } = query;
-  const authorization = `Bearer ${accessToken}`
+  const authorization = `Bearer ${accessToken}`;
   const responseObject = await getResponseObject(authorization, refreshToken, accessToken);
-  console.log(responseObject)
-  response.send(responseObject)
+  response.send(responseObject);
 });
 
 app.get("/discord/oauth/user", (request, response) => {
@@ -148,7 +202,7 @@ app.get("/discord/refresh", async ({ query }, response) => {
         refreshData.access_token
       );
 
-      response.send(responseObject);
+      response.status(200).send(responseObject);
     } catch (error) {
       console.error(error);
     }
@@ -176,8 +230,8 @@ app.get("/", async ({ query }, response) => {
       const oauthData = await tokenResponseData.body.json();
       const responseObject = {
         accessToken: oauthData.access_token,
-        refreshToken: oauthData.refresh_token
-      }
+        refreshToken: oauthData.refresh_token,
+      };
 
       emitter.emit("getUser", responseObject);
 

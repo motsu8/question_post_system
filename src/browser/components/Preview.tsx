@@ -16,7 +16,7 @@ function Preview({
   member,
 }: PreviewType) {
   return (
-    <div className={`${active} bg-discord rounded-lg p-7 text-sm overflow-y-auto`}>
+    <div className={`${active} bg-discord rounded-lg p-7 my-3 text-sm overflow-y-auto h-9/10`}>
       <div className="flex align-top space-x-3 text-slate-50">
         <div id="botAvatar" className="w-12 h-12">
           <img

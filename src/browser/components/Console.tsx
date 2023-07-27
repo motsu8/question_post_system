@@ -2,7 +2,7 @@ import React from "react";
 
 function Console({ active, input }: { active: string; input: string }) {
   return (
-    <div className={`${active} flex justify-center p-3`}>
+    <div className={`${active} flex justify-center p-3 my-3 overflow-y-auto h-9/10`}>
       <textarea
         id="console"
         className="bg-neutral-700 text-sm p-3 rounded-md drop-shadow-lg"

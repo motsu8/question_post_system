@@ -38,4 +38,11 @@ export type PreviewType = {
 export type DiscordUserType = {
   member: Client;
   channels: Channels[];
+  updatePostChannel: (event) => void;
+};
+
+export type TabsType = {
+  updateToggle: (number) => void;
+  postToDiscord: () => void;
+  toggle: number;
 };
