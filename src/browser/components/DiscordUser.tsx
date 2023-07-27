@@ -20,6 +20,7 @@ function DiscordUser({ member, channels, updatePostChannel }: DiscordUserType) {
           id="channels"
           className="py-3 px-4 block w-full drop-shadow-xl bg-slate-50 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
         >
+          <option selected>--投稿するチャンネルを選択してください--</option>
           {channels.map((channel) => (
             <option value={channel.id}>{channel.name}</option>
           ))}
