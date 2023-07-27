@@ -1,7 +1,7 @@
 import React from "react";
 import { TabsType } from "../types/Components";
 
-function Tabs({ updateToggle, toggle }: TabsType) {
+function Tabs({ updateToggle, toggle, postToDiscord }: TabsType) {
   return (
     <div className="flex justify-between">
       <div>
@@ -56,6 +56,7 @@ function Tabs({ updateToggle, toggle }: TabsType) {
         id="question"
         type="submit"
         form="question"
+        onClick={postToDiscord}
         className="text-white bg-recursion hover:bg-blue-500 my-1 font-medium rounded-md text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
       >
         質問する

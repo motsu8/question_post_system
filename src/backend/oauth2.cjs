@@ -50,6 +50,46 @@ app.use(
   })
 );
 
+const createCodeBlock = (code) => "```" + code + "```";
+
+const createQuestionString = (elements) => {
+  const {
+    userId,
+    final_question,
+    final_title,
+    final_url,
+    final_expect,
+    final_contents,
+    final_tried,
+    final_codeText,
+    final_consoleText,
+  } = elements;
+
+  const postQuestion = `<@${userId}> からの質問です！
+  ${final_question} : ${final_url}
+  ---------------------
+  **タイトル**
+  ${final_title}
+
+  **期待する動作**
+  ${final_expect}
+
+  **内容**
+  ${final_contents}
+
+  **試したこと**
+  ${final_tried}
+
+  **code**
+  ${createCodeBlock(final_codeText)}
+
+  **console**
+  ${createCodeBlock(final_consoleText)}
+  `;
+
+  return postQuestion;
+};
+
 const getResponseObject = async (authorization, refreshToken, accessToken) => {
   const requestOption = {
     method: "GET",
@@ -64,10 +104,11 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
     requestOption
   );
   const memberObject = await memberResult.body.json();
+  console.log(memberObject);
 
   // エラーメッセージがある場合、そのオブジェクトを返す
   if (memberObject.message) {
-    console.log(memberObject.message)
+    console.log(memberObject.message);
     return memberObject;
   }
 
@@ -109,26 +150,34 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
     },
     channels: channelObjectList,
   };
-  console.log(responseObject);
   return responseObject;
 };
 
-// app.post('/discord/post', ({req}, res) => {
-//   const
-// })
-app.post("/send-message", (req, res) => {
-  const message = `${req.body.message} \n ${createCodeBlock('console.log("ok")')}`;
-  console.log(req.body);
-  console.log(`Received message: ${message}`);
+app.post("/discord/question", async ({ query }, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
 
-  // ここでメッセージを処理するための任意の操作を実行できます
-  const guild = client.guilds.cache.get(DISCORD_GUILD_ID);
-  const channel = guild.channels.cache.get(DISCORD_CHANNEL_ID);
+  const guild = await client.guilds.cache.get(recursionGuildId);
+  const channel = await guild.channels.cache.get(query.channelId);
+  channel.send(createQuestionString(query));
+
   if (!channel) return res.status(400).json({ error: "Invalid channel ID." });
   res.status(200).json({ message: "Message sent successfully." });
 
-  channel.send(message);
 });
+
+// app.post("/send-message", (req, res) => {
+//   const message = `${req.body.message} \n ${createCodeBlock('console.log("ok")')}`;
+//   console.log(req.body);
+//   console.log(`Received message: ${message}`);
+
+//   // ここでメッセージを処理するための任意の操作を実行できます
+//   const guild = client.guilds.cache.get(DISCORD_GUILD_ID);
+//   const channel = guild.channels.cache.get(DISCORD_CHANNEL_ID);
+//   if (!channel) return res.status(400).json({ error: "Invalid channel ID." });
+//   res.status(200).json({ message: "Message sent successfully." });
+
+//   channel.send(message);
+// });
 
 app.get("/discord/user", async ({ query }, response) => {
   response.setHeader("Access-Control-Allow-Origin", "*");

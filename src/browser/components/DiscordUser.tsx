@@ -2,7 +2,7 @@ import React from "react";
 import { createImageUrl } from "../utils/domScripts";
 import { DiscordUserType } from "../types/Components";
 
-function DiscordUser({ member, channels }: DiscordUserType) {
+function DiscordUser({ member, channels, updatePostChannel }: DiscordUserType) {
   return (
     <>
       <div id="user" className="flex align-middle">
@@ -16,6 +16,7 @@ function DiscordUser({ member, channels }: DiscordUserType) {
         <select
           name="channels"
           aria-label="投稿するチャンネルを表示"
+          onChange={updatePostChannel}
           id="channels"
           className="py-3 px-4 block w-full drop-shadow-xl bg-slate-50 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
         >

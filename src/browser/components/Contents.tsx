@@ -9,8 +9,17 @@ import Preview from "./Preview";
 import Tabs from "./Tabs";
 import { getUrl, getText } from "../utils/contentScripts";
 import { Client, TextObj } from "../types/data";
+import Backend from "../constants/Backend";
 
-function Contents({ botData, member }: { botData: Client; member: Client }) {
+function Contents({
+  botData,
+  member,
+  postChannel,
+}: {
+  botData: Client;
+  member: Client;
+  postChannel: string;
+}) {
   const { title, expect, contents, tried, updateTitle, updateExpect, updateContents, updateTried } =
     useForms();
   const [toggle, setToggle] = useState(1);
@@ -35,9 +44,33 @@ function Contents({ botData, member }: { botData: Client; member: Client }) {
     setToggle(id);
   };
 
+  const postToDiscord = () => {
+    const questionParams = new URLSearchParams({
+      channelId: postChannel,
+      userId: member.id,
+      final_title: title,
+      final_expect: expect,
+      final_contents: contents,
+      final_tried: tried,
+      final_url: url,
+      final_consoleText: consoleText,
+      final_codeText: codeText,
+      final_question: question,
+    }).toString();
+
+    fetch(`${Backend.BASE_URL}/discord/question?${questionParams}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((response) => console.log(response));
+  };
+
   return (
     <div className="p-4 bg-gray-200 h-9/10">
-      <Tabs updateToggle={updateToggle} toggle={toggle} />
+      <Tabs updateToggle={updateToggle} toggle={toggle} postToDiscord={postToDiscord} />
       <Questions
         active={toggle === 1 ? "block" : "hidden"}
         url={`${question} : ${url}`}

@@ -8,6 +8,7 @@ import useDiscordData from "../hooks/DiscordData";
 
 function App() {
   const [draw, setDraw] = useState(false);
+  const [postChannel, setPostChannel] = useState("");
   const { member, bot, channels, updateMember, updateBot, updateChannels } = useDiscordData();
 
   useEffect(() => {
@@ -49,12 +50,16 @@ function App() {
     };
   }, [draw]);
 
+  const updatePostChannel = (event: Event) => {
+    setPostChannel(event.target!.value);
+  };
+
   return (
     <>
       <DiscordOauth active={draw ? "hidden" : "block"} storage={setDraw} />
       <div className={`${draw ? "block" : "hidden"} h-screen`}>
-        <Header member={member} channels={channels} />
-        <Contents botData={bot} member={member} />
+        <Header member={member} channels={channels} updatePostChannel={updatePostChannel} />
+        <Contents botData={bot} member={member} postChannel={postChannel} />
       </div>
     </>
   );
