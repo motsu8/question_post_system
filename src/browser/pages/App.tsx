@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
-import Tabs from "../components/Tabs";
+import Contents from "../components/Contents";
 import DiscordOauth from "../components/DiscordOauth";
 import DiscordData from "../constants/DiscordData";
 import Backend from "../constants/Backend";
@@ -54,7 +54,7 @@ function App() {
       <DiscordOauth active={draw ? "hidden" : "block"} storage={setDraw} />
       <div className={`${draw ? "block" : "hidden"} h-screen`}>
         <Header member={member} channels={channels} />
-        <Tabs botData={bot} member={member} />
+        <Contents botData={bot} member={member} />
       </div>
     </>
   );

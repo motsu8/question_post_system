@@ -39,3 +39,8 @@ export type DiscordUserType = {
   member: Client;
   channels: Channels[];
 };
+
+export type TabsType = {
+  updateToggle: (number) => void;
+  toggle: number;
+};
