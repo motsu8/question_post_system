@@ -65,29 +65,27 @@ const createQuestionString = (elements) => {
     final_consoleText,
   } = elements;
 
-  const postQuestion = `<@${userId}> からの質問です！
-  ${final_question} : ${final_url}
-  ---------------------
-  **タイトル**
-  ${final_title}
+  const postQuestion = [
+    `<@${userId}> からの質問です！`,
+    `${final_question} : ${final_url}`,
+    `---------------------`,
+    `${final_title ? "**タイトル**" : ""}`,
+    `${final_title ? final_title + '\n' : ""}`,
+    `${final_expect ? "**期待する動作**" : ""}`,
+    `${final_expect ? final_expect + '\n' : ""}`,
+    `${final_contents ? "**内容**" : ""}`,
+    `${final_contents ? final_contents + '\n' : ""}`,
+    `${final_tried ? "**試したこと**" : ""}`,
+    `${final_tried ? final_tried + '\n' : ""}`,
+    `${final_codeText ? "**code**" : ""}`,
+    `${createCodeBlock(final_codeText)}`,
+    `${final_codeText ? "**console**" : ""}`,
+    `${createCodeBlock(final_consoleText)}`,
+  ];
 
-  **期待する動作**
-  ${final_expect}
+  console.log(postQuestion.filter(text => text !== ''))
 
-  **内容**
-  ${final_contents}
-
-  **試したこと**
-  ${final_tried}
-
-  **code**
-  ${createCodeBlock(final_codeText)}
-
-  **console**
-  ${createCodeBlock(final_consoleText)}
-  `;
-
-  return postQuestion;
+  return postQuestion.filter((text) => text !== "").join("\n");
 };
 
 const getResponseObject = async (authorization, refreshToken, accessToken) => {
@@ -156,28 +154,13 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
 app.post("/discord/question", async ({ query }, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
 
-  const guild = await client.guilds.cache.get(recursionGuildId);
-  const channel = await guild.channels.cache.get(query.channelId);
+  const guild = await client.guilds.fetch(recursionGuildId);
+  const channel = await guild.channels.fetch(query.channelId);
   channel.send(createQuestionString(query));
 
   if (!channel) return res.status(400).json({ error: "Invalid channel ID." });
   res.status(200).json({ message: "Message sent successfully." });
-
 });
-
-// app.post("/send-message", (req, res) => {
-//   const message = `${req.body.message} \n ${createCodeBlock('console.log("ok")')}`;
-//   console.log(req.body);
-//   console.log(`Received message: ${message}`);
-
-//   // ここでメッセージを処理するための任意の操作を実行できます
-//   const guild = client.guilds.cache.get(DISCORD_GUILD_ID);
-//   const channel = guild.channels.cache.get(DISCORD_CHANNEL_ID);
-//   if (!channel) return res.status(400).json({ error: "Invalid channel ID." });
-//   res.status(200).json({ message: "Message sent successfully." });
-
-//   channel.send(message);
-// });
 
 app.get("/discord/user", async ({ query }, response) => {
   response.setHeader("Access-Control-Allow-Origin", "*");
