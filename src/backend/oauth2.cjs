@@ -26,7 +26,6 @@ const client = new Client({
 // クライアントオブジェクトが準備OKとなったとき一度だけ実行されます
 client.once("ready", async (c) => {
   console.log(`準備OKです! ${c.user.tag}がログインします。`);
-  console.log(client.user)
 });
 
 const pcEnv = {
@@ -66,6 +65,12 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
   );
   const memberObject = await memberResult.body.json();
 
+  // エラーメッセージがある場合、そのオブジェクトを返す
+  if (memberObject.message) {
+    console.log(memberObject.message)
+    return memberObject;
+  }
+
   //サーバーのユーザー取得
   const guild = await client.guilds.fetch(recursionGuildId);
   const members = await guild.members.list({ limit: 1000, cache: true });
@@ -96,7 +101,7 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
     bot: {
       name: client.user.username,
       avatar: client.user.avatar,
-      id: client.user.id
+      id: client.user.id,
     },
     tokens: {
       accessToken,
@@ -104,17 +109,33 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
     },
     channels: channelObjectList,
   };
-  console.log(responseObject)
+  console.log(responseObject);
   return responseObject;
 };
+
+// app.post('/discord/post', ({req}, res) => {
+//   const
+// })
+app.post("/send-message", (req, res) => {
+  const message = `${req.body.message} \n ${createCodeBlock('console.log("ok")')}`;
+  console.log(req.body);
+  console.log(`Received message: ${message}`);
+
+  // ここでメッセージを処理するための任意の操作を実行できます
+  const guild = client.guilds.cache.get(DISCORD_GUILD_ID);
+  const channel = guild.channels.cache.get(DISCORD_CHANNEL_ID);
+  if (!channel) return res.status(400).json({ error: "Invalid channel ID." });
+  res.status(200).json({ message: "Message sent successfully." });
+
+  channel.send(message);
+});
 
 app.get("/discord/user", async ({ query }, response) => {
   response.setHeader("Access-Control-Allow-Origin", "*");
   const { accessToken, refreshToken } = query;
-  const authorization = `Bearer ${accessToken}`
+  const authorization = `Bearer ${accessToken}`;
   const responseObject = await getResponseObject(authorization, refreshToken, accessToken);
-  console.log(responseObject)
-  response.send(responseObject)
+  response.send(responseObject);
 });
 
 app.get("/discord/oauth/user", (request, response) => {
@@ -148,7 +169,7 @@ app.get("/discord/refresh", async ({ query }, response) => {
         refreshData.access_token
       );
 
-      response.send(responseObject);
+      response.status(200).send(responseObject);
     } catch (error) {
       console.error(error);
     }
@@ -176,8 +197,8 @@ app.get("/", async ({ query }, response) => {
       const oauthData = await tokenResponseData.body.json();
       const responseObject = {
         accessToken: oauthData.access_token,
-        refreshToken: oauthData.refresh_token
-      }
+        refreshToken: oauthData.refresh_token,
+      };
 
       emitter.emit("getUser", responseObject);
 

@@ -3,7 +3,7 @@ import { Input } from "../types/Components";
 
 function Questions({ active, url, title, expect, contents, tried }: Input) {
   return (
-    <div className={`${active} overflow-y-auto`}>
+    <div className={`${active} overflow-y-auto h-9/10 my-3`}>
       <form>
         <div className="pb-6">
           <label

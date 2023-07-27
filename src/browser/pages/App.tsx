@@ -32,10 +32,15 @@ function App() {
         })
           .then((res) => res.json())
           .then((response) => {
-            // discordHooks
-            updateMember(response.member);
-            updateBot(response.bot);
-            updateChannels(response.channels);
+            // 失敗
+            if (response.message) {
+              console.log(`あと${Math.floor(response.retry_after * 2)}秒後に試してください`);
+            } else {
+              // discordHooks
+              updateMember(response.member);
+              updateBot(response.bot);
+              updateChannels(response.channels);
+            }
           });
       }
     }
