@@ -24,11 +24,17 @@ chrome.runtime.onMessage.addListener((obj, sender, response) => {
       codeText += `${(ele as HTMLElement).innerText}\n`;
     });
 
+    // language
+    const languageEle = (document.getElementById("languageSelect") as HTMLSelectElement)
+      .selectedOptions[0];
+    const languageText = languageEle.value;
+
     // response
     const resObj = {
       title: titled,
       code: codeText,
       console: consoleText,
+      language: languageText,
     };
 
     response(resObj);

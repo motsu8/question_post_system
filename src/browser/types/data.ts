@@ -18,6 +18,7 @@ export type TextObj = {
   title: string;
   code: string;
   console: string;
+  language: string;
 };
 
 export type Tokens = {
