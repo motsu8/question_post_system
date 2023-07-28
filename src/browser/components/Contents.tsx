@@ -69,7 +69,7 @@ function Contents({
   };
 
   return (
-    <div className="p-4 bg-gray-200 h-9/10">
+    <div className="p-4 bg-gray-200 h-9/10 tall:h-5/6">
       <Tabs updateToggle={updateToggle} toggle={toggle} postToDiscord={postToDiscord} />
       <Questions
         active={toggle === 1 ? "block" : "hidden"}

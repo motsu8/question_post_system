@@ -3,19 +3,22 @@ export default {
   content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      screens: {
+        'tall': { 'raw': '(max-height: 650px)' },
+      },
       width: {
         800: "48rem",
         600: "37rem",
       },
       height: {
-        '1/10': '10%',
-        '9/10': '90%'
+        "1/10": "10%",
+        "9/10": "90%",
       },
       colors: {
-        "discord": "#2E3035",
+        discord: "#2E3035",
         "discord-code": "#2B2D31",
-        "recursion": "#1976d2",
-        "mention": "#5865F2"
+        recursion: "#1976d2",
+        mention: "#5865F2",
       },
       animation: {
         "text-pop-up-tl":
