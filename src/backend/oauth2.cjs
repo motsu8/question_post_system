@@ -50,11 +50,12 @@ app.use(
   })
 );
 
-const createCodeBlock = (code) => "```" + code + "```";
+const createCodeBlock = (code, language) => "```" + language + '\n' + code + "```";
 
 const createQuestionString = (elements) => {
   const {
     userId,
+    usedLanguage,
     final_question,
     final_title,
     final_url,
@@ -79,12 +80,10 @@ const createQuestionString = (elements) => {
     `${final_tried ? final_tried : ""}`,
     `---------------------`,
     `${final_codeText ? "**code**" : ""}`,
-    `${createCodeBlock(final_codeText)}`,
+    `${createCodeBlock(final_codeText, usedLanguage)}`,
     `${final_codeText ? "**console**" : ""}`,
-    `${createCodeBlock(final_consoleText)}`,
+    `${createCodeBlock(final_consoleText, usedLanguage)}`,
   ];
-
-  console.log(postQuestion.filter(text => text !== ''))
 
   return postQuestion.filter((text) => text !== "").join("\n");
 };

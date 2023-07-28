@@ -27,6 +27,7 @@ function Contents({
   const [consoleText, setConsoleText] = useState("");
   const [codeText, setCodeText] = useState("");
   const [question, setQuestion] = useState("");
+  const [language, setLanguage] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -36,6 +37,7 @@ function Contents({
       setConsoleText(textObj.console);
       setCodeText(textObj.code);
       setQuestion(textObj.title);
+      setLanguage(textObj.language);
     })();
   }, []);
 
@@ -48,6 +50,7 @@ function Contents({
     const questionParams = new URLSearchParams({
       channelId: postChannel,
       userId: member.id,
+      usedLanguage: language,
       final_title: title,
       final_expect: expect,
       final_contents: contents,

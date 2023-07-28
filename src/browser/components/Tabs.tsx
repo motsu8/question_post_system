@@ -54,7 +54,7 @@ function Tabs({ updateToggle, toggle, postToDiscord }: TabsType) {
       </div>
       <button
         id="question"
-        type="submit"
+        type="button"
         form="question"
         onClick={postToDiscord}
         className="text-white bg-recursion hover:bg-blue-500 my-1 font-medium rounded-md text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
