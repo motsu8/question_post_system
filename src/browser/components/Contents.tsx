@@ -47,6 +47,12 @@ function Contents({
   };
 
   const postToDiscord = () => {
+    // チャンネルが選択されていない場合、何もしない
+    if (!postChannel) {
+      alert("投稿するチャンネルを選択してください");
+      return;
+    }
+
     const questionParams = new URLSearchParams({
       channelId: postChannel,
       userId: member.id,
