@@ -7,6 +7,12 @@
   "action": {
     "title": "question_post_to_discord"
   },
+  "icons": {
+    "16": "post_avatar_16.png",
+    "32": "post_avatar_32.png",
+    "48": "post_avatar_48.png",
+    "128": "post_avatar_128.png"
+  },
   "background": {
     "service_worker": "contents/background.js"
   },
