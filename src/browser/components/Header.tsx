@@ -13,7 +13,7 @@ function Header({
   updatePostChannel: (event) => void;
 }) {
   return (
-    <div className="flex justify-between align-middle p-4 h-1/10">
+    <div className="flex justify-between align-middle p-4 h-1/10 tall:h-1/6">
       <DiscordUser member={member} channels={channels} updatePostChannel={updatePostChannel} />
       <Menu />
     </div>
