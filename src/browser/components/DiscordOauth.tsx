@@ -25,9 +25,11 @@ function DiscordOauth({
     fetch(`${Backend.BASE_URL}/discord/oauth/user`, fetchOption)
       .then((res) => res.json())
       .then((response) => {
-        const { refreshToken, accessToken } = response;
+        const { refreshToken, accessToken, refreshDate } = response;
+        console.log(response);
         localStorage.setItem(DiscordData.REFRESH_TOKEN, refreshToken);
         localStorage.setItem(DiscordData.ACCESS_TOKEN, accessToken);
+        localStorage.setItem(DiscordData.REFRESH_DATE, refreshDate);
         storage(localStorage.getItem(DiscordData.REFRESH_TOKEN) !== null);
       });
   };
