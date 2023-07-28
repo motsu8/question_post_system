@@ -6,13 +6,12 @@ const { EventEmitter } = require("events");
 const {
   port,
   token,
-  extensionUrl,
   clientId,
   clientSecret,
   recursionGuildId,
 } = require("../../public/config.json");
 const cors = require("cors");
-const { Client, Events, GatewayIntentBits, channelLink } = require("discord.js");
+const { Client, GatewayIntentBits } = require("discord.js");
 
 // discord.bot
 const client = new Client({
@@ -28,11 +27,6 @@ client.once("ready", async (c) => {
   console.log(`準備OKです! ${c.user.tag}がログインします。`);
 });
 
-const pcEnv = {
-  desktop: "kmhodbdddpfondeliogfpbfadficglhk",
-  note: "hmodhebjgkhnijinieaamigglbabneea",
-};
-
 // サーバーにBOTを追加するURL
 console.log(
   `https://discord.com/api/oauth2/authorize?client_id=${clientId}&permissions=2064&scope=bot%20applications.commands`
@@ -44,11 +38,20 @@ const emitter = new EventEmitter();
 
 const baseUrl = "https://discord.com/api";
 
-app.use(
-  cors({
-    origin: `chrome-extension://${pcEnv.desktop}`,
-  })
-);
+// フロントエンドからオリジンを受け取るエンドポイント
+app.get('/set-origin', ({query}, res) => {
+  // フロントエンドから送信されたオリジンを取得
+  const originFromFrontend = query.origin;
+
+  // CORSミドルウェアを動的に設定
+  app.use(
+    cors({
+      origin: `chrome-extension://${originFromFrontend}`,
+    })
+  );
+
+  res.send({message:'CORSミドルウェアを設定しました'});
+});
 
 const createCodeBlock = (code, language) => "```" + language + '\n' + code + "```";
 
@@ -152,8 +155,6 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
 };
 
 app.post("/discord/question", async ({ query }, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-
   const guild = await client.guilds.fetch(recursionGuildId);
   const channel = await guild.channels.fetch(query.channelId);
   channel.send(createQuestionString(query));
@@ -163,7 +164,6 @@ app.post("/discord/question", async ({ query }, res) => {
 });
 
 app.get("/discord/user", async ({ query }, response) => {
-  response.setHeader("Access-Control-Allow-Origin", "*");
   const { accessToken, refreshToken } = query;
   const authorization = `Bearer ${accessToken}`;
   const responseObject = await getResponseObject(authorization, refreshToken, accessToken);
@@ -171,7 +171,6 @@ app.get("/discord/user", async ({ query }, response) => {
 });
 
 app.get("/discord/oauth/user", (request, response) => {
-  response.setHeader("Access-Control-Allow-Origin", "*");
   emitter.once("getUser", (tokenObject) => {
     return response.send(tokenObject);
   });
