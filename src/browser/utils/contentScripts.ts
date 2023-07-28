@@ -17,3 +17,10 @@ export async function getText(): Promise<TextObj | undefined> {
   });
   return response;
 }
+
+export async function getSender(): Promise<chrome.runtime.MessageSender | undefined> {
+  const response = await chrome.runtime.sendMessage({
+    message: "requestSender",
+  });
+  return response;
+}

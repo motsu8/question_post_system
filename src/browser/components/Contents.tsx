@@ -7,7 +7,7 @@ import Code from "./Code";
 import Console from "./Console";
 import Preview from "./Preview";
 import Tabs from "./Tabs";
-import { getUrl, getText } from "../utils/contentScripts";
+import { getUrl, getText, getSender } from "../utils/contentScripts";
 import { Client, TextObj } from "../types/data";
 import Backend from "../constants/Backend";
 
@@ -33,11 +33,19 @@ function Contents({
     (async () => {
       setUrl((await getUrl()) as string);
       const textObj = (await getText()) as TextObj;
-      console.log(textObj);
+      const senderObj = (await getSender()) as chrome.runtime.MessageSender;
+      console.log(senderObj.id);
       setConsoleText(textObj.console);
       setCodeText(textObj.code);
       setQuestion(textObj.title);
       setLanguage(textObj.language);
+
+      const originParams = new URLSearchParams({ origin: senderObj.id as string }).toString();
+      fetch(`${Backend.BASE_URL}/set-origin?${originParams}`, {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((response) => console.log(response));
     })();
   }, []);
 

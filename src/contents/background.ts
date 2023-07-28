@@ -21,12 +21,12 @@ chrome.action.onClicked.addListener((tab) => {
       const pageText = await chrome.tabs.sendMessage(tab.id as number, { message: "getText" });
 
       chrome.runtime.onMessage.addListener((obj, sender, response) => {
-        console.log(`sender: ${sender}`);
         if (obj.message === "requestText") {
-          console.log(pageText);
           response(pageText);
         } else if (obj.message === "requestQuestionTab") {
           response(tab);
+        } else if (obj.message === "requestSender") {
+          response(sender);
         }
       });
     })();
