@@ -1,12 +1,12 @@
 import { Channels, Client } from "./data";
 
 export type Input = {
-  url: string;
-  title: Function;
-  expect: Function;
-  contents: Function;
-  tried: Function;
+  title: (value: string) => void;
+  expect: (value: string) => void;
+  contents: (value: string) => void;
+  tried: (value: string) => void;
   active: string;
+  url: string;
 };
 
 export type Form = {
