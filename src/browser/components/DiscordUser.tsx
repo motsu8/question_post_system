@@ -19,7 +19,7 @@ function DiscordUser({ member, channels, updatePostChannel }: DiscordUserType) {
         id="channels"
         className="py-2 px-4 w-1/3 drop-shadow-xl bg-slate-50 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
       >
-        <option selected>- チャンネルを選択 -</option>
+        <option selected>-- チャンネルを選択 --</option>
         {channels.map((channel) => (
           <option value={channel.id}>{channel.name}</option>
         ))}
