@@ -1,3 +1,106 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* menu----------- */
+nav {
+  display: block;
+  position: fixed;
+  height: fit-content;
+  background-color: #e5e7eb;
+  left: -300px;
+  width: 220px;
+  top: 0;
+  bottom: 0;
+  transition: all 0.5s;
+  z-index: 3;
+  opacity: 0;
+}
+
+.open nav {
+  left: initial;
+  right: 0px;
+  opacity: 0.5;
+}
+
+nav .inner {
+  padding: 25px;
+}
+
+nav .inner ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav .inner ul li {
+  margin: 0;
+  border-bottom: 1px solid #333;
+}
+
+nav .inner ul li button {
+  display: block;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 1rem;
+  transition-duration: 0.2s;
+}
+
+nav .inner ul li button:hover {
+  background-color: #e4e4e4;
+}
+
+.toggleBtn {
+  display: block;
+  position: relative;
+  height: 100%;
+  z-index: 3;
+  cursor: pointer;
+}
+
+.toggleBtn span {
+  position: relative;
+  display: block;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background-color: rgb(100, 100, 100);
+  transition: all 0.5s;
+  border-radius: 4px;
+}
+
+.toggleBtn span:nth-child(1) {
+  top: 35%;
+}
+.toggleBtn span:nth-child(2) {
+  top: 50%;
+}
+.toggleBtn span:nth-child(3) {
+  top: 65%;
+}
+
+.open .toggleBtn span:nth-child(1) {
+  transform: translateY(10px) rotate(-315deg);
+}
+.open .toggleBtn span:nth-child(2) {
+  opacity: 0;
+}
+.open .toggleBtn span:nth-child(3) {
+  transform: translateY(-10px) rotate(315deg);
+}
+
+#mask {
+  display: none;
+  transition: all 0.5s;
+}
+
+.open #mask {
+  display: block;
+  width: 100vh;
+  height: 100vw;
+  top: 0;
+  left: 0;
+  position: fixed;
+  opacity: 0.5;
+  cursor: pointer;
+}

@@ -54,11 +54,20 @@ function App() {
     setPostChannel(event.target!.value);
   };
 
+  const updateDraw = (bool: boolean) => {
+    setDraw(bool);
+  };
+
   return (
     <>
       <DiscordOauth active={draw ? "hidden" : "block"} storage={setDraw} />
       <div className={`${draw ? "block" : "hidden"} h-screen`}>
-        <Header member={member} channels={channels} updatePostChannel={updatePostChannel} />
+        <Header
+          member={member}
+          channels={channels}
+          updatePostChannel={updatePostChannel}
+          updateDraw={updateDraw}
+        />
         <Contents botData={bot} member={member} postChannel={postChannel} />
       </div>
     </>
