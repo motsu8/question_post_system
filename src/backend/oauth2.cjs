@@ -1,10 +1,15 @@
 /* eslint-disable */
-require('dotenv').config();
+const path = require('path');
 const { request } = require("undici");
 const express = require("express");
 const { EventEmitter } = require("events");
 const cors = require("cors");
 const { Client, GatewayIntentBits } = require("discord.js");
+
+/// .envから環境変数取り込み
+require('dotenv').config({ 
+  path: path.resolve(__dirname, '../../.env') 
+});
 
 // discord.bot
 const client = new Client({
