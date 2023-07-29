@@ -154,7 +154,7 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
 };
 
 app.post("/discord/question", async ({ query }, res) => {
-  response.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "*");
   const guild = await client.guilds.fetch(process.env.RECURSION_GUILD_ID);
   const channel = await guild.channels.fetch(query.channelId);
   channel.send(createQuestionString(query));
