@@ -155,7 +155,7 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
 
 app.post("/feedback", async ({ query }, response) => {
   response.setHeader("Access-Control-Allow-Origin", "*");
-  const { feedback } = query;
+  console.log(query);
   console.log(feedback)
   const guild = await client.guilds.fetch(process.env.FEEDBACK_GUILD_ID);
   const channel = await guild.channels.fetch(process.env.FEEDBACK_CHANNEL_ID);
