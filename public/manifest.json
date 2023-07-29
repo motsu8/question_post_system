@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "question_post_to_discord",
+  "name": "RePOST",
   "version": "1.0",
   "permissions": ["activeTab", "tabs", "nativeMessaging", "declarativeNetRequest", "declarativeNetRequestWithHostAccess"],
   "minimum_chrome_version": "100",

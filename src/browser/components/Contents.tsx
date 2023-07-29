@@ -16,11 +16,15 @@ function Contents({
   member,
   postChannel,
   drawFeedBack,
+  updateDrawMask,
+  updateDrawCompleted,
 }: {
   botData: Client;
   member: Client;
   postChannel: string;
   drawFeedBack: boolean;
+  updateDrawMask: (bool: boolean) => void;
+  updateDrawCompleted: (bool: boolean) => void;
 }) {
   const { title, expect, contents, tried, updateTitle, updateExpect, updateContents, updateTried } =
     useForms();
@@ -63,6 +67,8 @@ function Contents({
       return;
     }
 
+    updateDrawMask(true);
+
     const questionParams = new URLSearchParams({
       channelId: postChannel,
       userId: member.id,
@@ -84,7 +90,15 @@ function Contents({
       },
     })
       .then((res) => res.json())
-      .then((response) => console.log(response));
+      .then((response) => {
+        if (response.message === "Message sent successfully.") {
+          updateDrawCompleted(true);
+          setTimeout(() => {
+            updateDrawCompleted(false);
+            updateDrawMask(false);
+          }, 1000);
+        }
+      });
   };
 
   return (

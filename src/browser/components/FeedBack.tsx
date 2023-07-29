@@ -3,17 +3,19 @@ import Backend from "../constants/Backend";
 
 function FeedBack({
   drawFeedBack,
+  updateDrawMask,
   updateDrawFeedBack,
+  updateDrawCompleted,
 }: {
   drawFeedBack: boolean;
   updateDrawFeedBack: (bool: boolean) => void;
+  updateDrawCompleted: (bool: boolean) => void;
+  updateDrawMask: (bool: boolean) => void;
 }) {
   const [feedBack, setFeedBack] = useState("");
-  const [drawCompleted, setDrawCompleted] = useState(false);
-  const [drawMask, setDrawMask] = useState(false);
 
   const sendFeedBack = () => {
-    setDrawMask(true);
+    updateDrawMask(true);
     const feedBackParams = new URLSearchParams({ feedBack }).toString();
     fetch(`${Backend.BASE_URL}/feedback?${feedBackParams}`, {
       method: "POST",
@@ -24,29 +26,17 @@ function FeedBack({
       .then((res) => res.json())
       .then((response) => {
         if (response.message === "Message sent successfully.") {
-          setDrawCompleted(true);
+          updateDrawCompleted(true);
           setTimeout(() => {
             updateDrawFeedBack(false);
-            setDrawCompleted(false);
-            setDrawMask(false);
+            updateDrawCompleted(false);
+            updateDrawMask(false);
           }, 1000);
         }
       });
   };
   return (
     <div className={`${drawFeedBack ? "flex" : "hidden"} justify-center items-center flex-col p-4`}>
-      <div
-        className={`${
-          drawMask ? "block" : "hidden"
-        } bg-black opacity-25 absolute top-0 left-0 h-screen w-screen z-10`}
-      />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-        <img
-          src="/checkBox.png"
-          alt="送信完了"
-          className={`${drawCompleted ? "block animate-jello-horizontal" : "hidden"}`}
-        />
-      </div>
       <div className="text-lg py-4 font-medium">フィードバック</div>
       <textarea
         name="feedBack"

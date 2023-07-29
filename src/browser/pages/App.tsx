@@ -10,8 +10,18 @@ import FeedBack from "../components/FeedBack";
 function App() {
   const [drawContents, setDrawContents] = useState(false);
   const [drawFeedBack, setDrawFeedBack] = useState(false);
+  const [drawCompleted, setDrawCompleted] = useState(false);
+  const [drawMask, setDrawMask] = useState(false);
   const [postChannel, setPostChannel] = useState("");
   const { member, bot, channels, updateMember, updateBot, updateChannels } = useDiscordData();
+
+  const updateDrawMask = (bool: boolean) => {
+    setDrawMask(bool);
+  };
+
+  const updateDrawCompleted = (bool: boolean) => {
+    setDrawCompleted(bool);
+  };
 
   const getDiscordUser = (refresh, token) => {
     const queryParams = new URLSearchParams({
@@ -95,6 +105,18 @@ function App() {
 
   return (
     <>
+      <div
+        className={`${
+          drawMask ? "block" : "hidden"
+        } bg-black opacity-25 absolute top-0 left-0 h-screen w-screen z-10`}
+      />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+        <img
+          src="/checkBox.png"
+          alt="送信完了"
+          className={`${drawCompleted ? "block animate-jello-horizontal" : "hidden"}`}
+        />
+      </div>
       <DiscordOauth active={drawContents ? "hidden" : "block"} storage={setDrawContents} />
       <div className={`${drawContents ? "block" : "hidden"} h-screen`}>
         <Header
@@ -106,12 +128,19 @@ function App() {
           drawFeedBack={drawFeedBack}
         />
         <Contents
+          updateDrawMask={updateDrawMask}
+          updateDrawCompleted={updateDrawCompleted}
           botData={bot}
           member={member}
           postChannel={postChannel}
           drawFeedBack={drawFeedBack}
         />
-        <FeedBack drawFeedBack={drawFeedBack} updateDrawFeedBack={updateDrawFeedBack} />
+        <FeedBack
+          drawFeedBack={drawFeedBack}
+          updateDrawFeedBack={updateDrawFeedBack}
+          updateDrawMask={updateDrawMask}
+          updateDrawCompleted={updateDrawCompleted}
+        />
       </div>
     </>
   );
