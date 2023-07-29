@@ -190,7 +190,7 @@ app.get("/discord/refresh", async ({ query }, response) => {
           client_secret: process.env.CLIENT_SECRET,
           grant_type: "refresh_token",
           refresh_token: refresh_token,
-          redirect_uri: `http://localhost:${process.env.PORT}`,
+          redirect_uri: `http://43.207.29.137:${process.env.PORT}`,
         }).toString(),
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -233,7 +233,7 @@ app.get("/", async ({ query }, response) => {
           client_secret: process.env.CLIENT_SECRET,
           code,
           grant_type: "authorization_code",
-          redirect_uri: `http://localhost:${process.env.PORT}`,
+          redirect_uri: `http://43.207.29.137:${process.env.PORT}`,
           scope: "identify",
         }).toString(),
         headers: {
