@@ -5,7 +5,6 @@ const express = require("express");
 const { EventEmitter } = require("events");
 const cors = require("cors");
 const { Client, GatewayIntentBits } = require("discord.js");
-const { default: Backend } = require('../browser/constants/Backend');
 
 // discord.bot
 const client = new Client({
@@ -253,4 +252,4 @@ app.get("/", async ({ query }, response) => {
 });
 
 client.login(process.env.TOKEN);
-app.listen(process.env.PORT, () => console.log(`App listening at ${Backend.BASE_URL}`));
+app.listen(process.env.PORT, () => console.log(`App listening at http://43.207.29.137:${process.env.PORT}`));
