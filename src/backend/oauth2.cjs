@@ -249,6 +249,8 @@ app.get("/", async ({ query }, response) => {
         refreshDate
       };
 
+      console.log(responseObject)
+
       emitter.emit("getUser", responseObject);
 
       return response.send("<script>window.close();</script>");
