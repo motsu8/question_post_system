@@ -53,7 +53,7 @@ function Tabs({ updateToggle, toggle, postToDiscord }: TabsType) {
         </ul>
       </div>
       <button
-        id="question"
+        id="questionPost"
         type="button"
         form="question"
         onClick={postToDiscord}
