@@ -111,7 +111,7 @@ function App() {
           postChannel={postChannel}
           drawFeedBack={drawFeedBack}
         />
-        <FeedBack drawFeedBack={drawFeedBack} />
+        <FeedBack drawFeedBack={drawFeedBack} updateDrawFeedBack={updateDrawFeedBack} />
       </div>
     </>
   );
