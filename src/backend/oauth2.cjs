@@ -11,8 +11,6 @@ require('dotenv').config({
   path: path.resolve(__dirname, '../../.env') 
 });
 
-console.log(process.env.TOKEN)
-
 // discord.bot
 const client = new Client({
   intents: [
@@ -224,6 +222,7 @@ app.get("/discord/refresh", async ({ query }, response) => {
 });
 
 app.get("/", async ({ query }, response) => {
+  console.log('Oauth2!!!!!!')
   const { code } = query;
   if (code) {
     try {
