@@ -1,5 +1,5 @@
 /* eslint-disable */
-const path = require('path');
+const path = require("path");
 const { request } = require("undici");
 const express = require("express");
 const { EventEmitter } = require("events");
@@ -7,8 +7,8 @@ const cors = require("cors");
 const { Client, GatewayIntentBits } = require("discord.js");
 
 /// .envから環境変数取り込み
-require('dotenv').config({ 
-  path: path.resolve(__dirname, '../../.env') 
+require("dotenv").config({
+  path: path.resolve(__dirname, "../../.env"),
 });
 
 // discord.bot
@@ -34,25 +34,25 @@ console.log(
 const app = express();
 const emitter = new EventEmitter();
 const baseUrl = "https://discord.com/api";
-let originUrl
+let originUrl;
 
 app.use(cors());
 // フロントエンドからオリジンを受け取るエンドポイント
-app.get('/set-origin', ({query}, res) => {
+app.get("/set-origin", ({ query }, res) => {
   // フロントエンドから送信されたオリジンを取得
   const originFromFrontend = query.origin;
-  originUrl = `chrome-extension://${originFromFrontend}`
+  originUrl = `chrome-extension://${originFromFrontend}`;
 
-  res.send({message:`[${originUrl}] としてCORSミドルウェアを設定します。`});
+  res.send({ message: `[${originUrl}] としてCORSミドルウェアを設定します。` });
 });
 
 app.use(
   cors({
     origin: originUrl,
   })
-)
+);
 
-const createCodeBlock = (code, language) => "```" + language + '\n' + code + "```";
+const createCodeBlock = (code, language) => "```" + language + "\n" + code + "```";
 
 const createQuestionString = (elements) => {
   const {
@@ -73,11 +73,11 @@ const createQuestionString = (elements) => {
     `${final_question} : ${final_url}`,
     `---------------------`,
     `${final_title ? "**タイトル**" : ""}`,
-    `${final_title ? final_title + '\n' : ""}`,
+    `${final_title ? final_title + "\n" : ""}`,
     `${final_expect ? "**期待する動作**" : ""}`,
-    `${final_expect ? final_expect + '\n' : ""}`,
+    `${final_expect ? final_expect + "\n" : ""}`,
     `${final_contents ? "**内容**" : ""}`,
-    `${final_contents ? final_contents + '\n' : ""}`,
+    `${final_contents ? final_contents + "\n" : ""}`,
     `${final_tried ? "**試したこと**" : ""}`,
     `${final_tried ? final_tried : ""}`,
     `---------------------`,
@@ -149,18 +149,29 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
     },
     channels: channelObjectList,
   };
-  console.log(responseObject)
+  console.log(responseObject);
   return responseObject;
 };
 
-app.post("/discord/question", async ({ query }, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+app.post("/feedback", async ({ query }, response) => {
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  const { feedback } = query;
+  const guild = await client.guilds.fetch(process.env.FEEDBACK_GUILD_ID);
+  const channel = await guild.channels.fetch(process.env.FEEDBACK_CHANNEL_ID);
+  channel.send(feedback);
+
+  if (!channel) return response.status(400).json({ error: "Invalid channel ID." });
+  response.status(200).json({ message: "Message sent successfully." });
+});
+
+app.post("/discord/question", async ({ query }, response) => {
+  response.setHeader("Access-Control-Allow-Origin", "*");
   const guild = await client.guilds.fetch(process.env.RECURSION_GUILD_ID);
   const channel = await guild.channels.fetch(query.channelId);
   channel.send(createQuestionString(query));
 
-  if (!channel) return res.status(400).json({ error: "Invalid channel ID." });
-  res.status(200).json({ message: "Message sent successfully." });
+  if (!channel) return response.status(400).json({ error: "Invalid channel ID." });
+  response.status(200).json({ message: "Message sent successfully." });
 });
 
 app.get("/discord/user", async ({ query }, response) => {
@@ -211,8 +222,8 @@ app.get("/discord/refresh", async ({ query }, response) => {
         user: userObject,
         refreshToken: refreshData.refresh_token,
         accessToken: refreshData.access_token,
-        refreshDate
-      }
+        refreshDate,
+      };
 
       response.status(200).send(responseObject);
     } catch (error) {
@@ -222,7 +233,7 @@ app.get("/discord/refresh", async ({ query }, response) => {
 });
 
 app.get("/", async ({ query }, response) => {
-  console.log('Oauth2!!!!!!')
+  console.log("Oauth2!!!!!!");
   const { code } = query;
   if (code) {
     try {
@@ -241,16 +252,16 @@ app.get("/", async ({ query }, response) => {
         },
       });
       const oauthData = await tokenResponseData.body.json();
-      console.log(oauthData)
+      console.log(oauthData);
       const refreshDate = new Date();
       refreshDate.setDate(refreshDate.getDate() + 6);
       const responseObject = {
         accessToken: oauthData.access_token,
         refreshToken: oauthData.refresh_token,
-        refreshDate
+        refreshDate,
       };
 
-      console.log(responseObject)
+      console.log(responseObject);
 
       emitter.emit("getUser", responseObject);
 
@@ -262,4 +273,6 @@ app.get("/", async ({ query }, response) => {
 });
 
 client.login(process.env.TOKEN);
-app.listen(process.env.PORT, () => console.log(`App listening at http://43.207.29.137:${process.env.PORT}`));
+app.listen(process.env.PORT, () =>
+  console.log(`App listening at http://43.207.29.137:${process.env.PORT}`)
+);

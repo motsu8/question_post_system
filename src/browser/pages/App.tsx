@@ -5,9 +5,11 @@ import DiscordOauth from "../components/DiscordOauth";
 import DiscordData from "../constants/DiscordData";
 import Backend from "../constants/Backend";
 import useDiscordData from "../hooks/DiscordData";
+import FeedBack from "../components/FeedBack";
 
 function App() {
-  const [draw, setDraw] = useState(false);
+  const [drawContents, setDrawContents] = useState(false);
+  const [drawFeedBack, setDrawFeedBack] = useState(false);
   const [postChannel, setPostChannel] = useState("");
   const { member, bot, channels, updateMember, updateBot, updateChannels } = useDiscordData();
 
@@ -26,7 +28,7 @@ function App() {
         if (response.message) {
           console.log(`あと${Math.floor(response.retry_after * 2)}秒後に試してください`);
         } else {
-          setDraw(true);
+          setDrawContents(true);
           // discordHooks
           updateMember(response.member);
           updateBot(response.bot);
@@ -46,10 +48,10 @@ function App() {
 
     // localStorageにrefreshTokenがない場合、認証表示
     if (refresh === null || refresh === "undefined") {
-      setDraw(false);
+      setDrawContents(false);
     } // tokenの有効期限切れの場合、リフレッシュ
     else if (today > RefreshDate) {
-      setDraw(true);
+      setDrawContents(true);
       const refreshParams = new URLSearchParams({ refresh_token: refresh }).toString();
       fetch(`${Backend.BASE_URL}/discord/refresh?${refreshParams}`, {
         method: "GET",
@@ -70,34 +72,46 @@ function App() {
     else if (refresh !== null && token !== null) {
       // accessTokenを使用してユーザーデータを取得する
       if (!ignore) {
-        setDraw(true);
+        setDrawContents(true);
         getDiscordUser(refresh, token);
       }
     }
     return () => {
       ignore = true;
     };
-  }, [draw]);
+  }, [drawContents]);
 
   const updatePostChannel = (event: Event) => {
     setPostChannel(event.target!.value);
   };
 
   const updateDraw = (bool: boolean) => {
-    setDraw(bool);
+    setDrawContents(bool);
+  };
+
+  const updateDrawFeedBack = (bool: boolean) => {
+    setDrawFeedBack(bool);
   };
 
   return (
     <>
-      <DiscordOauth active={draw ? "hidden" : "block"} storage={setDraw} />
-      <div className={`${draw ? "block" : "hidden"} h-screen`}>
+      <DiscordOauth active={drawContents ? "hidden" : "block"} storage={setDrawContents} />
+      <div className={`${drawContents ? "block" : "hidden"} h-screen`}>
         <Header
           member={member}
           channels={channels}
           updatePostChannel={updatePostChannel}
           updateDraw={updateDraw}
+          updateDrawFeedBack={updateDrawFeedBack}
+          drawFeedBack={drawFeedBack}
         />
-        <Contents botData={bot} member={member} postChannel={postChannel} />
+        <Contents
+          botData={bot}
+          member={member}
+          postChannel={postChannel}
+          drawFeedBack={drawFeedBack}
+        />
+        <FeedBack drawFeedBack={drawFeedBack} updateDrawFeedBack={updateDrawFeedBack} />
       </div>
     </>
   );

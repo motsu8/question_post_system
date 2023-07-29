@@ -1,6 +1,12 @@
 import React from "react";
 
-function Menu({ updateDraw }: { updateDraw: (bool: boolean) => void }) {
+function Menu({
+  updateDraw,
+  updateDrawFeedBack,
+}: {
+  updateDraw: (bool: boolean) => void;
+  updateDrawFeedBack: (bool: boolean) => void;
+}) {
   const nav = document.querySelector("#navArea");
 
   const toggleClass = () => nav?.classList.toggle("open");
@@ -17,7 +23,12 @@ function Menu({ updateDraw }: { updateDraw: (bool: boolean) => void }) {
           <ul>
             <li id="nav-logout">
               <button type="button" onClick={clearStorage}>
-                LogOut
+                ログアウト
+              </button>
+            </li>
+            <li id="nav-feedback">
+              <button type="button" onClick={() => updateDrawFeedBack(true)}>
+                フィードバック
               </button>
             </li>
           </ul>
