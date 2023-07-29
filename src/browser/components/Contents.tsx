@@ -15,10 +15,12 @@ function Contents({
   botData,
   member,
   postChannel,
+  drawFeedBack,
 }: {
   botData: Client;
   member: Client;
   postChannel: string;
+  drawFeedBack: boolean;
 }) {
   const { title, expect, contents, tried, updateTitle, updateExpect, updateContents, updateTried } =
     useForms();
@@ -86,7 +88,7 @@ function Contents({
   };
 
   return (
-    <div className="p-4 bg-gray-200 h-9/10 tall:h-5/6">
+    <div className={`${drawFeedBack ? "hidden" : "block"} p-4 bg-gray-200 h-9/10 tall:h-5/6`}>
       <Tabs updateToggle={updateToggle} toggle={toggle} postToDiscord={postToDiscord} />
       <Questions
         active={toggle === 1 ? "block" : "hidden"}
