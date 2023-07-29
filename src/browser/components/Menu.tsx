@@ -22,12 +22,24 @@ function Menu({
         <div className="inner">
           <ul>
             <li id="nav-logout">
-              <button type="button" onClick={clearStorage}>
+              <button
+                type="button"
+                onClick={() => {
+                  clearStorage();
+                  toggleClass();
+                }}
+              >
                 ログアウト
               </button>
             </li>
             <li id="nav-feedback">
-              <button type="button" onClick={() => updateDrawFeedBack(true)}>
+              <button
+                type="button"
+                onClick={() => {
+                  updateDrawFeedBack(true);
+                  toggleClass();
+                }}
+              >
                 フィードバック
               </button>
             </li>

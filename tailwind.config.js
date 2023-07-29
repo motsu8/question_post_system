@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       screens: {
-        'tall': { 'raw': '(max-height: 650px)' },
+        tall: { raw: "(max-height: 650px)" },
       },
       width: {
         800: "48rem",
@@ -21,21 +21,27 @@ export default {
         mention: "#5865F2",
       },
       animation: {
-        "text-pop-up-tl":
-          "text-pop-up-tl 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275)    forwards",
+        "jello-horizontal": "jello-horizontal 0.8s ease   both",
       },
       keyframes: {
-        "text-pop-up-tl": {
-          "0%": {
-            transform: "translateY(0) translateX(0)",
-            "transform-origin": "50% 50%",
-            "text-shadow": "none",
+        "jello-horizontal": {
+          "0%,to": {
+            transform: "scale3d(1, 1, 1)",
           },
-          to: {
-            transform: "translateY(-50px) translateX(-50px)",
-            "transform-origin": "50% 50%",
-            "text-shadow":
-              "0 1px 0 #ccc, 0 2px 0 #ccc, 0 3px 0 #ccc, 0 4px 0 #ccc, 0 5px 0 #ccc, 0 6px 0 #ccc, 0 7px 0 #ccc, 0 8px 0 #ccc, 0 9px 0 #ccc, 0 50px 30px rgba(0, 0, 0, .3)",
+          "30%": {
+            transform: "scale3d(1.25, .75, 1)",
+          },
+          "40%": {
+            transform: "scale3d(.75, 1.25, 1)",
+          },
+          "50%": {
+            transform: "scale3d(1.15, .85, 1)",
+          },
+          "65%": {
+            transform: "scale3d(.95, 1.05, 1)",
+          },
+          "75%": {
+            transform: "scale3d(1.05, .95, 1)",
           },
         },
       },
