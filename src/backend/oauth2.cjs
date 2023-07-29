@@ -241,6 +241,7 @@ app.get("/", async ({ query }, response) => {
         },
       });
       const oauthData = await tokenResponseData.body.json();
+      console.log(oauthData)
       const refreshDate = new Date();
       refreshDate.setDate(refreshDate.getDate() + 6);
       const responseObject = {
