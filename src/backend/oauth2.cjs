@@ -11,6 +11,8 @@ require('dotenv').config({
   path: path.resolve(__dirname, '../../.env') 
 });
 
+console.log(process.env.TOKEN)
+
 // discord.bot
 const client = new Client({
   intents: [
