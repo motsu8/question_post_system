@@ -23,7 +23,6 @@ function DiscordOauth({
       .then((res) => res.json())
       .then((response) => {
         const { refreshToken, accessToken, refreshDate } = response;
-        console.log(response);
         localStorage.setItem(DiscordData.REFRESH_TOKEN, refreshToken);
         localStorage.setItem(DiscordData.ACCESS_TOKEN, accessToken);
         localStorage.setItem(DiscordData.REFRESH_DATE, refreshDate);

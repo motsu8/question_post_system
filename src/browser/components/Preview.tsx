@@ -15,6 +15,10 @@ function Preview({
   botData,
   member,
 }: PreviewType) {
+  function createText(text: string): React.JSX.Element[] {
+    return text.split("\n").map((ele) => <p>{ele}</p>);
+  }
+
   return (
     <div className={`${active} bg-discord rounded-lg p-7 my-3 text-sm overflow-y-auto h-9/10`}>
       <div className="flex align-top space-x-3 text-slate-50">
@@ -44,15 +48,15 @@ function Preview({
             </div>
             <div className={expect === "" ? "hidden" : "block"}>
               <p>期待する動作</p>
-              <div>{expect}</div>
+              {createText(expect)}
             </div>
             <div className={contents === "" ? "hidden" : "block"}>
               <p>内容</p>
-              <div>{contents}</div>
+              {createText(contents)}
             </div>
             <div className={tried === "" ? "hidden" : "block"}>
               <p>試したこと</p>
-              <div>{tried}</div>
+              {createText(tried)}
             </div>
           </div>
           <p>----------------------</p>
