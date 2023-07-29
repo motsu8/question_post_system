@@ -149,6 +149,7 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
     },
     channels: channelObjectList,
   };
+  console.log(responseObject)
   return responseObject;
 };
 

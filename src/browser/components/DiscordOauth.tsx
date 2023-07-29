@@ -9,11 +9,8 @@ function DiscordOauth({
   active: string;
   storage: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const url =
-    "https://discord.com/api/oauth2/authorize?client_id=1130079596839182376&redirect_uri=http%3A%2F%2Flocalhost%3A53134&response_type=code&scope=guilds.members.read";
-
   const loginAction = () => {
-    window.open(url, "_blank");
+    window.open(DiscordData.OAUTH_URL, "_blank");
     const fetchOption = {
       method: "GET",
       headers: {
