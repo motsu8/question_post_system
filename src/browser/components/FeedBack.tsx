@@ -12,7 +12,12 @@ function FeedBack({
 
   const sendFeedBack = () => {
     const feedBackParams = new URLSearchParams({ feedBack }).toString();
-    fetch(`${Backend.BASE_URL}/feedback?${feedBackParams}`, { method: "POST" })
+    fetch(`${Backend.BASE_URL}/feedback?${feedBackParams}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
       .then((res) => res.json())
       .then((response) => {
         if (response.message === "Message sent successfully.") {
