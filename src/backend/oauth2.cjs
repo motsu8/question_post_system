@@ -1,17 +1,11 @@
 /* eslint-disable */
-
+require('dotenv').config();
 const { request } = require("undici");
 const express = require("express");
 const { EventEmitter } = require("events");
-const {
-  port,
-  token,
-  clientId,
-  clientSecret,
-  recursionGuildId,
-} = require("../../public/config.json");
 const cors = require("cors");
 const { Client, GatewayIntentBits } = require("discord.js");
+const { default: Backend } = require('../browser/constants/Backend');
 
 // discord.bot
 const client = new Client({
@@ -29,7 +23,7 @@ client.once("ready", async (c) => {
 
 // サーバーにBOTを追加するURL
 console.log(
-  `https://discord.com/api/oauth2/authorize?client_id=${clientId}&permissions=2064&scope=bot%20applications.commands`
+  `https://discord.com/api/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=2064&scope=bot%20applications.commands`
 );
 
 // Discord OAuth
@@ -102,7 +96,7 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
 
   // recursionメンバーオブジェクト
   const memberResult = await request(
-    `${baseUrl}/users/@me/guilds/${recursionGuildId}/member`,
+    `${baseUrl}/users/@me/guilds/${process.env.RECURSION_GUILD_ID}/member`,
     requestOption
   );
   const memberObject = await memberResult.body.json();
@@ -114,7 +108,7 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
   }
 
   //サーバーのユーザー取得
-  const guild = await client.guilds.fetch(recursionGuildId);
+  const guild = await client.guilds.fetch(process.env.RECURSION_GUILD_ID);
   const members = await guild.members.list({ limit: 1000, cache: true });
 
   // userの参加しているテキストチャンネル
@@ -156,7 +150,7 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
 
 app.post("/discord/question", async ({ query }, res) => {
   response.setHeader("Access-Control-Allow-Origin", "*");
-  const guild = await client.guilds.fetch(recursionGuildId);
+  const guild = await client.guilds.fetch(process.env.RECURSION_GUILD_ID);
   const channel = await guild.channels.fetch(query.channelId);
   channel.send(createQuestionString(query));
 
@@ -187,11 +181,11 @@ app.get("/discord/refresh", async ({ query }, response) => {
       const refreshTokenResponseData = await request(`${baseUrl}/oauth2/token`, {
         method: "POST",
         body: new URLSearchParams({
-          client_id: clientId,
-          client_secret: clientSecret,
+          client_id: process.env.CLIENT_ID,
+          client_secret: process.env.CLIENT_SECRET,
           grant_type: "refresh_token",
           refresh_token: refresh_token,
-          redirect_uri: `http://localhost:${port}`,
+          redirect_uri: `http://localhost:${process.env.PORT}`,
         }).toString(),
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -229,11 +223,11 @@ app.get("/", async ({ query }, response) => {
       const tokenResponseData = await request(`${baseUrl}/oauth2/token`, {
         method: "POST",
         body: new URLSearchParams({
-          client_id: clientId,
-          client_secret: clientSecret,
+          client_id: process.env.CLIENT_ID,
+          client_secret: process.env.CLIENT_SECRET,
           code,
           grant_type: "authorization_code",
-          redirect_uri: `http://localhost:${port}`,
+          redirect_uri: `http://localhost:${process.env.PORT}`,
           scope: "identify",
         }).toString(),
         headers: {
@@ -258,5 +252,5 @@ app.get("/", async ({ query }, response) => {
   }
 });
 
-client.login(token);
-app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
+client.login(process.env.TOKEN);
+app.listen(process.env.PORT, () => console.log(`App listening at ${Backend.BASE_URL}`));

@@ -49,15 +49,14 @@ function App() {
       setDraw(false);
     } // tokenの有効期限切れの場合、リフレッシュ
     else if (today > RefreshDate) {
+      setDraw(true);
       const refreshParams = new URLSearchParams({ refresh_token: refresh }).toString();
       fetch(`${Backend.BASE_URL}/discord/refresh?${refreshParams}`, {
         method: "GET",
       })
         .then((res) => res.json())
         .then((response) => {
-          setDraw(true);
           if (!ignore) {
-            console.log(response);
             const { accessToken, refreshToken, refreshDate, user } = response;
             localStorage.setItem(DiscordData.REFRESH_TOKEN, refreshToken);
             localStorage.setItem(DiscordData.ACCESS_TOKEN, accessToken);
