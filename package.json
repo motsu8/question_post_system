@@ -12,7 +12,9 @@
     "preview": "vite preview",
     "prepare": "husky install",
     "serve": "nodemon src/backend/oauth2.cjs",
-    "restart": "forever restart src/backend/oauth2.cjs"
+    "restart": "forever restart src/backend/oauth2.cjs",
+    "start": "forever start src/backend/oauth2.cjs",
+    "stop": "forever stop src/backend/oauth2.cjs"
   },
   "dependencies": {
     "cors": "^2.8.5",
