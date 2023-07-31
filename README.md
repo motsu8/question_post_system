@@ -34,5 +34,5 @@ RePOSTは、Recustionコミュニティの質問テンプレートに沿って�
 
 
 <div align=center>
-<video src="src/assets/demo.mp4">
+<img src="src/assets/demo.gif">
 </div>
