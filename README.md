@@ -1,6 +1,6 @@
 <h3 align="center">
     <a href="https://tetris-greenteam.vercel.app/">
-        <img src="src/assets/post_avatar_128.png" height="200">
+        <img src="src/assets/image.png" height="200">
     </a>
 </h3>
 
