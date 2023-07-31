@@ -4,7 +4,7 @@
     </a>
 </h3>
 
-
+<div>
 [![Open in Visual Studio Code](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://open.vscode.dev/recursionist-teamdev-green/tetris)
 ![image](https://img.shields.io/badge/chrome-extension-E2E8F0?logo=googlechrome)
 ![image](https://img.shields.io/badge/typescript-E2E8F0?logo=typescript)
@@ -14,6 +14,7 @@
 ![image](https://img.shields.io/badge/vite-E2E8F0?logo=vite)
 ![image](https://img.shields.io/badge/eslint-E2E8F0?logo=eslint)
 ![image](https://img.shields.io/badge/prettier-E2E8F0?logo=prettier)
+</div>
 
 [recursionist.io](recursionist.io)での学習効率を高める拡張機能です。
 
