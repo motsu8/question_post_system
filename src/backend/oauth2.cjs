@@ -35,23 +35,24 @@ console.log(
 // Discord OAuth
 const app = express();
 const emitter = new EventEmitter();
-
 const baseUrl = "https://discord.com/api";
+let originUrl
 
+app.use(cors());
 // フロントエンドからオリジンを受け取るエンドポイント
 app.get('/set-origin', ({query}, res) => {
   // フロントエンドから送信されたオリジンを取得
   const originFromFrontend = query.origin;
+  originUrl = `chrome-extension://${originFromFrontend}`
 
-  // CORSミドルウェアを動的に設定
-  app.use(
-    cors({
-      origin: `chrome-extension://${originFromFrontend}`,
-    })
-  );
-
-  res.send({message:'CORSミドルウェアを設定しました'});
+  res.send({message:`[${originUrl}] としてCORSミドルウェアを設定します。`});
 });
+
+app.use(
+  cors({
+    origin: originUrl,
+  })
+)
 
 const createCodeBlock = (code, language) => "```" + language + '\n' + code + "```";
 
@@ -155,6 +156,7 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
 };
 
 app.post("/discord/question", async ({ query }, res) => {
+  response.setHeader("Access-Control-Allow-Origin", "*");
   const guild = await client.guilds.fetch(recursionGuildId);
   const channel = await guild.channels.fetch(query.channelId);
   channel.send(createQuestionString(query));
@@ -164,6 +166,7 @@ app.post("/discord/question", async ({ query }, res) => {
 });
 
 app.get("/discord/user", async ({ query }, response) => {
+  response.setHeader("Access-Control-Allow-Origin", "*");
   const { accessToken, refreshToken } = query;
   const authorization = `Bearer ${accessToken}`;
   const responseObject = await getResponseObject(authorization, refreshToken, accessToken);
@@ -171,12 +174,14 @@ app.get("/discord/user", async ({ query }, response) => {
 });
 
 app.get("/discord/oauth/user", (request, response) => {
+  response.setHeader("Access-Control-Allow-Origin", "*");
   emitter.once("getUser", (tokenObject) => {
     return response.send(tokenObject);
   });
 });
 
 app.get("/discord/refresh", async ({ query }, response) => {
+  response.setHeader("Access-Control-Allow-Origin", "*");
   const { refresh_token } = query;
   if (refresh_token) {
     try {
@@ -226,9 +231,12 @@ app.get("/", async ({ query }, response) => {
         },
       });
       const oauthData = await tokenResponseData.body.json();
+      const refreshDate = new Date();
+      refreshDate.setDate(refreshDate.getDate() + 6);
       const responseObject = {
         accessToken: oauthData.access_token,
         refreshToken: oauthData.refresh_token,
+        refreshDate
       };
 
       emitter.emit("getUser", responseObject);
