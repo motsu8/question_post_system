@@ -4,7 +4,7 @@
     </a>
 </h3>
 
-[![Open in Visual Studio Code](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://open.vscode.dev/recursionist-teamdev-green/tetris)
+[![Open in Visual Studio Code](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://open.vscode.dev/motsu8/question_post_system)
 ![image](https://img.shields.io/badge/chrome-extension-E2E8F0?logo=googlechrome)
 ![image](https://img.shields.io/badge/typescript-E2E8F0?logo=typescript)
 ![image](https://img.shields.io/badge/React-E2E8F0?logo=react)
