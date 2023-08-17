@@ -46,7 +46,7 @@ https://chrome.google.com/webstore/detail/repost/ncecccibmoomlikfocmpmidbhiioonl
 [Figma](https://www.figma.com/file/wPjO41fDIQYHRdLW7xzKqV/recursion_question?type=design&node-id=0%3A1&mode=design&t=Hr7K02YIxORFJuma-1)にて作成
 
 ## 使用技術
-|カテゴリ|使用技術|
+|カテゴリ|技術|
 |----|----|
 |フロントエンド|React Typescript tailwind|
 |バックエンド|express discord.js|
