@@ -5,6 +5,7 @@ const express = require("express");
 const { EventEmitter } = require("events");
 const cors = require("cors");
 const { Client, GatewayIntentBits } = require("discord.js");
+const { access } = require("fs");
 
 /// .envから環境変数取り込み
 require("dotenv").config({
@@ -23,11 +24,18 @@ const client = new Client({
 // クライアントオブジェクトが準備OKとなったとき一度だけ実行されます
 client.once("ready", async (c) => {
   console.log(`準備OKです! ${c.user.tag}がログインします。`);
+  const guild = await client.guilds.fetch('1029144547571282053');
+  const channels = await guild.channels.fetch()
+  const category = channels.filter(channel => channel.type === 4)
+  category.each(channel => {
+    console.log(`----------------------${channel.name}`)
+    channel.children.cache.each(c => console.log(c.name))
+  })
 });
 
 // サーバーにBOTを追加するURL
 console.log(
-  `https://discord.com/api/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=2064&scope=bot%20applications.commands`
+  `https://discord.com/api/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=2064&scope=bot`
 );
 
 // Discord OAuth
