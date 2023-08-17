@@ -48,8 +48,9 @@ https://chrome.google.com/webstore/detail/repost/ncecccibmoomlikfocmpmidbhiioonl
 ## 使用技術
 |カテゴリ|技術|
 |----|----|
-|フロントエンド|React Typescript tailwind|
-|バックエンド|express discord.js|
-|インフラ|chrome ec2|
+|フロントエンド|Typescript React Tailwindcss|
+|バックエンド|express.js discord.js|
+|インフラ|ChromeWebStore EC2|
+|ビルド|Vite|
 |CI|husky|
-|...etc|eslint prettier vite|
+|...etc|eslint prettier|
