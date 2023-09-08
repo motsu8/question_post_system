@@ -49,21 +49,24 @@ function App() {
       setDraw(false);
     } // tokenの有効期限切れの場合、リフレッシュ
     else if (today > RefreshDate) {
-      if (!ignore) {
-        setDraw(true);
-        const refreshParams = new URLSearchParams({ refresh_token: refresh }).toString();
-        fetch(`${Backend.BASE_URL}/discord/refresh?${refreshParams}`, {
-          method: "GET",
-        })
-          .then((res) => res.json())
-          .then((response) => {
-            const { accessToken, refreshToken, refreshDate } = response;
+      const refreshParams = new URLSearchParams({ refresh_token: refresh }).toString();
+      fetch(`${Backend.BASE_URL}/discord/refresh?${refreshParams}`, {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((response) => {
+          setDraw(true);
+          if (!ignore) {
+            console.log(response);
+            const { accessToken, refreshToken, refreshDate, user } = response;
             localStorage.setItem(DiscordData.REFRESH_TOKEN, refreshToken);
             localStorage.setItem(DiscordData.ACCESS_TOKEN, accessToken);
             localStorage.setItem(DiscordData.REFRESH_DATE, refreshDate);
-            getDiscordUser(refreshToken, accessToken);
-          });
-      }
+            updateMember(user.member);
+            updateBot(user.bot);
+            updateChannels(user.channels);
+          }
+        });
     } // tokenを使用して、Discordデータを取得
     else if (refresh !== null && token !== null) {
       // accessTokenを使用してユーザーデータを取得する

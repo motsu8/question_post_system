@@ -106,7 +106,6 @@ const getResponseObject = async (authorization, refreshToken, accessToken) => {
     requestOption
   );
   const memberObject = await memberResult.body.json();
-  console.log(memberObject);
 
   // エラーメッセージがある場合、そのオブジェクトを返す
   if (memberObject.message) {
@@ -199,11 +198,25 @@ app.get("/discord/refresh", async ({ query }, response) => {
         },
       });
       const refreshData = await refreshTokenResponseData.body.json();
-      const responseObject = await getResponseObject(
+      console.log(refreshData)
+
+      const refreshDate = new Date();
+      refreshDate.setDate(refreshDate.getDate() + 6);
+
+      const userObject = await getResponseObject(
         `${refreshData.token_type} ${refreshData.access_token}`,
         refreshData.refresh_token,
         refreshData.access_token
       );
+      console.log(userObject)
+
+      const responseObject = {
+        user: userObject,
+        refreshToken: refreshData.refresh_token,
+        accessToken: refreshData.access_token,
+        refreshDate
+      }
+      console.log(responseObject)
 
       response.status(200).send(responseObject);
     } catch (error) {
