@@ -198,7 +198,6 @@ app.get("/discord/refresh", async ({ query }, response) => {
         },
       });
       const refreshData = await refreshTokenResponseData.body.json();
-      console.log(refreshData)
 
       const refreshDate = new Date();
       refreshDate.setDate(refreshDate.getDate() + 6);
@@ -208,7 +207,6 @@ app.get("/discord/refresh", async ({ query }, response) => {
         refreshData.refresh_token,
         refreshData.access_token
       );
-      console.log(userObject)
 
       const responseObject = {
         user: userObject,
@@ -216,7 +214,6 @@ app.get("/discord/refresh", async ({ query }, response) => {
         accessToken: refreshData.access_token,
         refreshDate
       }
-      console.log(responseObject)
 
       response.status(200).send(responseObject);
     } catch (error) {
